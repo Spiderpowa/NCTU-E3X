@@ -30,6 +30,20 @@ class Api extends REST_Controller {
 		}
 	}
 	
+	function flag_post(){
+		if(!$this->user->isLogin()){
+			$this->response(array('error'=>'Please Login', 'relogin'=>1));
+		}
+		$this->load->model('flag');
+		$ids = explode(',', $this->post('id'));
+		$data = array();
+		foreach($ids as $id){
+			$this->flag->setFlag($this->post('type'), $id, $this->post('flag'));
+			$data[] = array($this->post('type'), $id, $this->post('flag'));
+		}
+		$this->response(array('success'=>$data));
+	}
+	
 
 	function user_post($action){
 		switch($action){

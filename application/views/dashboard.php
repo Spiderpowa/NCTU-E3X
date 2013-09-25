@@ -8,6 +8,18 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane active" id="announcement">
+        <ul class="nav nav-pills pull-left" id="announcement-filter">
+          <li class="active"><a href="#" data-filter="read">顯示已讀</a></li>
+          <li><a href="#" data-filter="hidden">顯示隱藏</a></li>
+        </ul>
+        <button class="btn btn-primary pull-right" type="button" id="read-all-announcement">全部標記已讀</button>
+        <div class="hide">
+          <div class="btn-group announcement-action pull-right">
+            <button type="button" class="btn btn-default" data-flag="read"><span class="glyphicon glyphicon-check"></span> 已讀</button>
+            <button type="button" class="btn btn-default" data-flag="hidden"><span class="glyphicon glyphicon-eye-close"></span> 隱藏</button>
+          </div>
+        </div>
+        <div class="clearfix"></div>
       </div>
       <div class="tab-pane" id="coursetable">
       </div>

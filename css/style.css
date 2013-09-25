@@ -87,9 +87,15 @@ a[name] {
 #dashboard li div.badge {
 	margin-left:5px;
 }
-#announcement .panel-heading small {
+#announcement-filter {
+	margin:10px 0;
+}
+#announcement .panel-primary .panel-heading small {
 	color:white;
 }
 #announcement .panel-body {
 	overflow:auto;
+}
+#announcement .panel .label {
+	margin-left:5px;
 }
