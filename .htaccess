@@ -1,0 +1,10 @@
+RewriteEngine on
+RewriteBase /
+RewriteCond $1 !^(index\.php|robots|img|css|js)
+RewriteRule ^(.*)$ index.php/$1 [L]
+RewriteCond %{HTTP_HOST} ^nogoogle [NC]
+RewriteCond $1 ^robots\.txt
+RewriteRule ^(.*)$ robots/robots.nogoogle.txt [L]
+RewriteCond $1 ^robots\.txt
+RewriteRule ^(.*)$ robots/robots.txt [L]
+

@@ -1,0 +1,95 @@
+/* CSS Document */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, body{
+	font-family: "微軟正黑體", "Arial Unicode MS", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#body{
+	margin:0 auto;
+	padding:20px;
+	padding-top:60px;
+	background-color:white;
+}
+
+#footer{
+	margin-top:50px;
+	clear:both;
+	text-align:center;
+}
+
+.center{
+	display:block;
+	margin:0 auto;
+	text-align:center;
+}
+
+.center li{
+	display:inline-block !important;
+	float:none !important;
+}
+.full-width{
+	padding:0;
+}
+.full-width-bg{
+	position:absolute;
+	left:0;
+	height:inherit;
+	width:100%;
+}
+.full-width-content{
+	margin:0 auto;
+	padding-top:100px;
+	width:1000px;
+}
+@media (max-width:1000px){
+	.full-width-content{
+		padding-top:50px;
+		padding-left:10px;
+		padding-right:10px;
+		width:100%;
+	}
+}
+/* Fix jQuery validate success label */
+.has-success .form-control + label.error{
+	display:inline;
+}
+/* Fix anchor bug */
+a[name] {
+  padding-top: 60px;
+  margin-top: -60px;
+  display: inline-block; /* required for webkit browsers */
+}
+/* Index */
+#welcome{
+	margin-top:-10px;
+	height:450px;
+	text-align:center;
+	color:white;
+	text-shadow:2px 2px 2px #333;
+}
+#welcome h1{
+	font-size:60px;
+	line-height:1.25;
+}
+#welcome p{
+	font-size: 20px;
+	line-height:1.25;
+}
+#welcome .full-width-bg{
+	background:url(../img/index_image.jpg) no-repeat 0 -350px;
+}
+#registerForm .modal-footer .alert{
+	text-align:center;
+}
+/* Dashboard */
+#dashboard .tab-content {
+	padding:10px;
+}
+#dashboard li div.badge {
+	margin-left:5px;
+}
+#announcement .panel-heading small {
+	color:white;
+}
+#announcement .panel-body {
+	overflow:auto;
+}
