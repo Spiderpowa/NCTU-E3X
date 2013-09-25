@@ -26,7 +26,7 @@ class Flag extends CI_Model{
 			'entry_id'=>$entry_id,
 			'flag'=>$flag
 		);
-		if($flag === NULL){//remove all
+		if($flag === NULL || !strlen($flag)){//remove all
 			unset($data['flag']);
 		}
 		$this->db->delete('flag', $data);

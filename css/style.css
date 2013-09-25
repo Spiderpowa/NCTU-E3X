@@ -99,3 +99,12 @@ a[name] {
 #announcement .panel .label {
 	margin-left:5px;
 }
+#announcement #hidden-announcement {
+	display:none;
+}
+#announcement .panel .panel-heading {
+	cursor:pointer;
+}
+#announcement .panel .panel-body {
+	overflow:hidden;
+}

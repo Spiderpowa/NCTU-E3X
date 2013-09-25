@@ -30,7 +30,7 @@ class Api extends REST_Controller {
 		}
 	}
 	
-	function flag_post(){
+	function flag_post($action = 'add'){
 		if(!$this->user->isLogin()){
 			$this->response(array('error'=>'Please Login', 'relogin'=>1));
 		}
@@ -38,7 +38,12 @@ class Api extends REST_Controller {
 		$ids = explode(',', $this->post('id'));
 		$data = array();
 		foreach($ids as $id){
-			$this->flag->setFlag($this->post('type'), $id, $this->post('flag'));
+			if($action == 'add')
+				$this->flag->setFlag($this->post('type'), $id, $this->post('flag'));
+			else if($action == 'remove')
+				$this->flag->removeFlag($this->post('type'), $id, $this->post('flag'));
+			else
+				continue;
 			$data[] = array($this->post('type'), $id, $this->post('flag'));
 		}
 		$this->response(array('success'=>$data));

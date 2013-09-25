@@ -19,21 +19,27 @@ var getLatestAnnounce = function(){
 		for(var i=0; i<data.length; ++i){
 			var container = $('<div id="announcement-entry-'+i+'">').appendTo($('#announcement'));
 			var header = $('<div>').appendTo(container);
-			var body = $('<div>').appendTo(container);
+			var body = $('<div id="announcement-entry-body-'+i+'">').appendTo(container);
 			container.addClass('panel');
 			header.addClass('panel-heading');
 			body.addClass('panel-body');
 			var ann = data[i];
 			announcement.push(ann);
 			header.html('<h2>'+ann.Caption+' <small>'+ann.BeginDate+'</small></h2>');
+			header.click(function(){
+				var obj = $($(this).data('target'));
+				obj.collapse('toggle');
+			});
+			header.data('target', '#announcement-entry-body-'+i);
 			body.html(ann.Content);
+			body.addClass('collapse in');
 			var bar = action_bar.clone(true);
 			body.prepend(bar);
 			bar.data('id', i);
-			//bar.find('button').click(setFlag);
+			bar.data('container', '#announcement-entry-'+i);
+			bar.find('button').tooltip();
 		}
 		applyAnnounceFlag();
-		$('.filter_hidden').hide();//Directly hide hidden announcement
 	});
 }
 
@@ -41,6 +47,7 @@ var applyAnnounceFlag = function(){
 	var unread = 0;
 	var newDiv = $('<div>').addClass('label label-danger pull-right').text('New');
 	var hideDiv = $('<div>').addClass('label label-info pull-right').text('Hidden');
+	var starDiv = $('<div>').addClass('label label-warning pull-right').append('<span class="glyphicon glyphicon-star"></span>');
 	$('#tab-announcement a .badge').remove();
 	$('#announcement .panel .label').remove();
 	for(var i=0; i<announcement.length; ++i){
@@ -53,16 +60,36 @@ var applyAnnounceFlag = function(){
 			return (css.match (/\b(panel-|filter_)\S+/g) || []).join(' ');
 		});
 		//Process Flag
-		if(ann.flag.indexOf('read') == -1){
-			++unread;
-			header.prepend(newDiv.clone());
-			container.addClass('panel-primary');
-		}else{
-			container.addClass('panel-default');
-		}
-		if(ann.flag.indexOf('hidden') != -1){
+		var hidden = false, star = false;
+		if(ann.flag.indexOf('hidden') != -1){//Hidden
+			hidden = true;
 			header.prepend(hideDiv.clone());
 			container.addClass('panel-info');
+			container.appendTo('#hidden-announcement');
+		}
+		if(ann.flag.indexOf('star') != -1){//Star
+			star = true;
+			header.prepend(starDiv.clone());
+			container.data('star', 'true');
+			body.find('button.no-star').attr('disabled', 'disabled');
+		}else{
+			container.removeData('star');
+			body.find('button.no-star').attr('disabled', false);
+		}
+		
+		if(ann.flag.indexOf('read') == -1){//Unread
+			if(!hidden && !star){
+				++unread;
+				header.prepend(newDiv.clone());
+			}
+			if(!hidden){
+				container.addClass('panel-primary');
+				container.appendTo('#unread-announcement');
+			}
+		}else if(!hidden){
+			container.addClass('panel-default');
+			container.appendTo('#read-announcement');
+			body.collapse();
 		}
 		for(var j=0; j<ann.flag.length; ++j){
 			container.addClass('filter_'+ann.flag[j]);
@@ -76,16 +103,42 @@ var applyAnnounceFlag = function(){
 }
 
 var setFlag = function(){
+	var container = $($(this).parent().data('container'));
 	var id = $(this).parent().data('id');
 	var flag = $(this).data('flag');
 	var ann = announcement[id];
 	var ann_id = ann.BulletinId;
 	var client =  new $.RestClient('/API/');
 	client.add('flag');
-	client.flag.create({type:'announcement', id:ann_id, flag:flag}).done(function(data){
-		api_error_handle(data);
-	});
-	ann.flag.push(flag);
+	var action = '';
+	var data = {type:'announcement', id:ann_id, flag:flag};
+	if(flag == 'star' && container.data('star')){//unstar
+		action = 'remove';
+	}
+	if (flag == 'star' && !container.data('star')){//star
+		//remove all other flags
+		ann.flag = new Array();
+		(function(data){
+			var flagdata = $.extend(true, {}, data);//Deep Copy
+			flagdata.flag = null;
+			client.flag.create('remove', flagdata).done(function(data){
+				api_error_handle(data);
+				flagdata.flag = 'star';
+				client.flag.create(action, flagdata).done(api_error_handle);
+			});
+		})(data);
+	}else{
+		client.flag.create(action, data).done(api_error_handle);
+	}
+	if(action == 'remove'){
+		container.removeData(flag);
+		var index;
+		while((index = ann.flag.indexOf(flag)) != -1){
+			ann.flag.splice(index, 1);
+		}
+	}else{
+		ann.flag.push(flag);
+	}
 	applyAnnounceFlag();
 	applyAnnounceFilter();
 }
@@ -101,11 +154,11 @@ var initAnnounceComponent = function(){
 	$('.hide .announcement-action button').click(setFlag);
 	//Hide All Announcement
 	$('#read-all-announcement').click(function(){
-		var r;
 		bootbox.confirm('全部標記成已讀?', function(result){
 			if(result){
 				var ids = new Array();
 				$.each(announcement, function(i, e){
+					if(e.flag.indexOf('star')!=-1)return;
 					ids.push(e.BulletinId);
 					e.flag.push('read');
 				});
@@ -122,28 +175,19 @@ var initAnnounceComponent = function(){
 }
 
 var applyAnnounceFilter = function(){
-	$('#announcement .panel').removeClass('announce_hide');
-	$('#announcement .panel').addClass('announce_show');
+	var active_filter = new Array();
 	var filter = $('#announcement-filter li a');
 	$.each(filter, function(i, e){
-		var isActive = $(e).parent().hasClass('active');
-		var filterType = $(e).data('filter');
-		var entries = $('.filter_'+filterType);
-		//*
-		if(!isActive){
-			entries.addClass('announce_hide');
-			entries.removeClass('announce_show');
-		}
-		//*/
-		/*
-		if(isActive)entries.show('blind', {direction: 'up' }, 'fast');
-		else entries.hide('blind', {direction: 'up' }, 'fast');
-		*/
+		if($(e).parent().hasClass('active'))
+			active_filter.push($(e).data('filter'));
 	});
-	
-	$('#announcement .announce_hide').hide('blind', {direction: 'up' }, 'slow');
-	$('#announcement .announce_show').show('blind', {direction: 'up' }, 'slow');
-	
+	if(active_filter.indexOf('hidden') != -1){
+		$('.announcement-container').hide();
+		$('#hidden-announcement').show();
+	}else{
+		$('.announcement-container').show();
+		$('#hidden-announcement').hide();
+	}
 }
 
 var addLoading = function(){
