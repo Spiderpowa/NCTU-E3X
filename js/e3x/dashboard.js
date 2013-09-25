@@ -83,7 +83,7 @@ var setFlag = function(){
 	var client =  new $.RestClient('/API/');
 	client.add('flag');
 	client.flag.create({type:'announcement', id:ann_id, flag:flag}).done(function(data){
-		error_handle(data);
+		api_error_handle(data);
 	});
 	ann.flag.push(flag);
 	applyAnnounceFlag();
@@ -101,18 +101,23 @@ var initAnnounceComponent = function(){
 	$('.hide .announcement-action button').click(setFlag);
 	//Hide All Announcement
 	$('#read-all-announcement').click(function(){
-		var ids = new Array();
-		$.each(announcement, function(i, e){
-			ids.push(e.BulletinId);
-			e.flag.push('read');
+		var r;
+		bootbox.confirm('全部標記成已讀?', function(result){
+			if(result){
+				var ids = new Array();
+				$.each(announcement, function(i, e){
+					ids.push(e.BulletinId);
+					e.flag.push('read');
+				});
+				var client =  new $.RestClient('/API/');
+				client.add('flag');
+				client.flag.create({type:'announcement', id:ids.toString(), flag:'read'}).done(function(data){
+					api_error_handle(data);
+				});
+				applyAnnounceFlag();
+				applyAnnounceFilter();
+			}
 		});
-		var client =  new $.RestClient('/API/');
-		client.add('flag');
-		client.flag.create({type:'announcement', id:ids.toString(), flag:'read'}).done(function(data){
-			error_handle(data);
-		});
-		applyAnnounceFlag();
-		applyAnnounceFilter();
 	});
 }
 
