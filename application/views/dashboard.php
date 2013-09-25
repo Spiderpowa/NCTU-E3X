@@ -26,4 +26,4 @@
     </ul>
   </div>
 </div>
-<script src="/js/e3x/dashboard.js"></script>
+<?=load_js('e3x/dashboard.js');?>

@@ -86,3 +86,12 @@ $('form div.modal').on('show.bs.modal', function(){
 	$('form div.modal .modal-body .alert').hide();
 	$('form div.modal .modal-footer .btn').attr('disabled', false);
 });
+var parse_parameter = function(){
+	var msg = getParameterByName('login_error');
+	if(msg.length){
+		$('#loginModal').modal('show');
+		modalAlert('#loginModal', 'danger', msg);
+	}
+};
+
+parse_parameter();

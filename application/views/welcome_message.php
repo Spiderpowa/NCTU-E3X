@@ -87,4 +87,5 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<script src="/js/e3x/index.js"></script>
+<a href="https://github.com/Spiderpowa/NCTU-E3X"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+<?=load_js('e3x/index.js');?>

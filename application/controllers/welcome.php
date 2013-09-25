@@ -20,7 +20,7 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('user');
-		if($this->user->isLogin()){
+		if(!$this->input->get('noredirect') && $this->user->isLogin()){
 			$this->load->helper('url');
 			redirect('/dashboard');
 		}

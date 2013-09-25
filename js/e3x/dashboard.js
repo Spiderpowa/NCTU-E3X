@@ -8,6 +8,7 @@ var getLatestAnnounce = function(){
 	var client = new $.RestClient('/API/')
 	client.add('announce');
 	var req = client.announce.read('login').done(function(data){
+		api_error_handle(data);
 		$('#announcement .loading').remove();
 		$('#tab-announcement img').remove();
 		var unread = 0;

@@ -11,6 +11,7 @@ class MY_Loader extends CI_Loader {
 		$vars['message'] = $this->msg;
 		$vars['session_user'] = get_instance()->session->userdata('user');
 		$vars['session_course'] = get_instance()->session->userdata('course');
+		get_instance()->load->helper('path');
 		$content  = $this->view('templates/header', $vars, $return);
 		$content .= $this->view($template_name, $vars, $return);
 		$content .= $this->view('templates/footer', $vars, $return);

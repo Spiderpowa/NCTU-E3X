@@ -39,6 +39,7 @@ class E3Mobile extends CI_Model{
 	}
 	
 	function getCourseList(){
+		if(($test = $this->testTicket())!==true)return $test;
 		$data = $this->_genData(array(
 			'role'=>'stu'
 		), true);
@@ -51,6 +52,7 @@ class E3Mobile extends CI_Model{
 	}
 	
 	function getAnnouncement($ids, $type = 1){
+		if(($test = $this->testTicket())!==true)return $test;
 		$anns = array();
 		foreach($ids as $id){
 			$data = $this->_genData(array(
@@ -68,6 +70,7 @@ class E3Mobile extends CI_Model{
 	}
 	
 	function getAnnouncementLogin(){
+		if(($test = $this->testTicket())!==true)return $test;
 		$anns = array();
 		$data = $this->_genData(array(
 			'studentId' => $this->_AccountID
@@ -81,10 +84,18 @@ class E3Mobile extends CI_Model{
 		return $anns;
 	}
 	
+	function testTicket(){
+		$data = $this->_genData(array(), true);
+		$return = $this->_sendRequest($this->_API . 'GetPersonalData', $data);
+		if(is_array($return) && $return['error'])
+			return $return;
+		return true;
+	}
 	
 	function isLogin(){
 		return ($this->_LoginTicket !== NULL && $this->_AccountID !== NULL);
 	}
+
 	
 	function getCourse($course_id){
 		foreach($this->_Course as $key => $course){
@@ -94,7 +105,7 @@ class E3Mobile extends CI_Model{
 		return false;
 	}
 	
-	private function _genData($data, $needAccountID = false){
+	private function _genData($data = array(), $needAccountID = false){
 		$data['loginTicket'] = $this->_LoginTicket;
 		if($needAccountID)
 			$data['accountId'] = $this->_AccountID;
@@ -119,11 +130,15 @@ class E3Mobile extends CI_Model{
 			),
 		);
 		$context = stream_context_create($options);
-		$result = file_get_contents($url, false, $context);
+		$result = @file_get_contents($url, false, $context);
+		if($result === false){
+			$result = array('error'=>'Login Timeout', 'relogin'=>1);
+		}
 		return $result;			
 	}
 	
 	private function _parseXml($xml){
+		if(is_array($xml))return $xml;
 		$data = new SimpleXMLElement($xml);
 		return $data;
 	}

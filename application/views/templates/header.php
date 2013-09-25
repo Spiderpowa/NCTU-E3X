@@ -11,7 +11,7 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet">
 <link href="/css/bootstrap-editable.css" type="text/css" rel="stylesheet" />
-<link href="/css/style.css?v=201309151" type="text/css" rel="stylesheet" />
+<?=load_css('style.css');?>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="/js/jquery.rest.min.js?v=0.0.7"></script>
 <script src="/js/jquery.cookie.js"></script>
@@ -19,7 +19,8 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="/js/holder.js"></script>
 <script src="/js/bootbox.min.js?v=4.0.0"></script>
-<!--<script src="/js/js.js"></script>-->
+<?=load_js('js.js');?>
+<?=load_js('e3x/error_handle.js');?>
 <script>
 var bootstrapButton = $.fn.button.noConflict();
 $.fn.bootstrapBtn = bootstrapButton;
@@ -79,12 +80,12 @@ bootbox.setDefaults({locale:'zh_TW'});
 -->
 <!--Message-->
 <? foreach($message['error'] as $str){?>
-<div class="alert alert-error fade in"><a class="close" data-dismiss="alert" href="#">&times;</a><h4>Error</h4><?=$str;?></div>
+<div class="alert alert-danger fade in"><a class="close" data-dismiss="alert" href="#">&times;</a><h4>Error</h4><?=html_escape($str);?></div>
 <? }?>
 <? foreach($message['info'] as $str){?>
-<div class="alert fade in"><a class="close" data-dismiss="alert" href="#">&times;</a><h4>Info</h4><?=$str;?></div>
+<div class="alert alert-info fade in"><a class="close" data-dismiss="alert" href="#">&times;</a><h4>Info</h4><?=html_escape($str);?></div>
 <? }?>
 <? foreach($message['success'] as $str){?>
-<div class="alert alert-success fade in"><a class="close" data-dismiss="alert" href="#">&times;</a><h4>Success</h4><?=$str;?></div>
+<div class="alert alert-success fade in"><a class="close" data-dismiss="alert" href="#">&times;</a><h4>Success</h4><?=html_escape($str);?></div>
 <? }?>
 </div>

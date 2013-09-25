@@ -22,6 +22,8 @@ class Api extends REST_Controller {
 		}
 		if($anns == NULL){
 			$this->response(array('error'=>'Unknown Action:'.$action));
+		}else if($anns['error']){
+			$this->response($anns);
 		}else{
 			$this->flag->getFlags('announcement', $anns);
 			$this->response($anns);
