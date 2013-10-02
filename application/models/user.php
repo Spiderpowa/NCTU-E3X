@@ -34,11 +34,11 @@ class User extends CI_Model{
 		}
 		$this->load->model('e3mobile');
 		$return = $this->e3mobile->login($username, $password);
-		$return['id'] = $id;
 		if($return === FALSE){
 			return array('error'=>'登入失敗');
 		}else{
-			//Get Courst List
+			//Get Courst List	
+			$return['id'] = $id;
 			$this->session->set_userdata('user', $return);
 			$this->session->set_userdata('course', $this->e3mobile->getCourseList());
 			return array('username'=>$username);
