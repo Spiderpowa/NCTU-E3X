@@ -247,12 +247,16 @@ var applyHomeworkFlag = function(){
 			container.removeData('star');
 			body.find('button.no-star').attr('disabled', false);
 		}
-		if(entry.type == 1){//Due
-			++unread;
+		if(entry.type == 3){//Due
 			header.find('h2').prepend(dueDiv.clone());
-			container.addClass('panel-warning');
-			container.appendTo('#due-homework');
-			body.find('button').attr('disabled', 'disabled');
+			container.addClass('panel-danger');
+			if(entry.flag.indexOf('read') > -1){
+				container.appendTo('#read-homework');
+				body.collapse();
+			}else{
+				++unread;
+				container.appendTo('#due-homework');
+			}
 		}else if(entry.flag.indexOf('read') == -1){//Unread
 			if(!star){
 				++unread;
