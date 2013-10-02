@@ -84,6 +84,23 @@ class E3Mobile extends CI_Model{
 		return $anns;
 	}
 	
+	function getStuHomeworkList($courseId, $type){
+		if(($test = $this->testTicket())!==true)return $test;
+		$ass = array();
+		$data = $this->_genData(array(
+			'courseId' => $courseId,
+			'listType' => $type
+		), true);
+		$return = $this->_post('GetStuHomeworkList', $data);
+		foreach($return as $entry){
+			$hw = $this->_fetchXml($entry, array('HomeworkId', 'DisplayName', 'BeginDate', 'EndDate', 'SubmitType'));
+			$hw['id'] = $this->getCourse($courseId);
+			$hw['type'] = (int)$type;
+			$ass[] = $hw;
+		}
+		return $ass;
+	}
+	
 	function testTicket(){
 		$data = $this->_genData(array(), true);
 		$return = $this->_sendRequest($this->_API . 'GetPersonalData', $data);
@@ -103,6 +120,14 @@ class E3Mobile extends CI_Model{
 				return $key;
 		}
 		return false;
+	}
+	
+	function getCourseId($course){
+		return $this->_Course[$course];
+	}
+	
+	function getAllCourse(){
+		return $this->_Course;
 	}
 	
 	private function _genData($data = array(), $needAccountID = false){

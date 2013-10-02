@@ -61,7 +61,8 @@ class Flag extends CI_Model{
 	
 	private function _findEntryId($type, $entry){
 		$data = array(
-			'announcement'=>'BulletinId'
+			'announcement'=>'BulletinId',
+			'homework'=>'HomeworkId'
 		);
 		return $data[$type];
 	}

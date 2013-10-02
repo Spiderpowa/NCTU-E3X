@@ -30,6 +30,22 @@ class Api extends REST_Controller {
 		}
 	}
 	
+	function homework_get($type){
+		$course = $this->e3mobile->getAllCourse();
+		if($this->get('id')){
+			$ids = explode(',', $this->get('id'));
+		}else{
+			$ids = range(0, count($course)-1);
+		}
+		$hw = array();
+		foreach($ids as $id){
+			$tmp = array_merge($hw, $this->e3mobile->getStuHomeworkList($course[$id]['CourseId'], $type));
+			$hw = $tmp;
+		}
+		$this->flag->getFlags('homework', $hw);
+		$this->response($hw);
+	}
+	
 	function flag_post($action = 'add'){
 		if(!$this->user->isLogin()){
 			$this->response(array('error'=>'Please Login', 'relogin'=>1));

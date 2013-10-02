@@ -90,21 +90,29 @@ a[name] {
 #announcement-filter {
 	margin:10px 0;
 }
-#announcement .panel-primary .panel-heading small {
+#dashboard .panel-primary .panel-heading small {
 	color:white;
 }
-#announcement .panel-body {
+#dashboard .panel-body {
 	overflow:auto;
 }
-#announcement .panel .label {
+#dashboard .panel .label {
 	margin-left:5px;
 }
-#announcement #hidden-announcement {
+#dashboard #announcement #hidden-announcement {
 	display:none;
 }
-#announcement .panel .panel-heading {
+#dashboard .panel .panel-heading {
 	cursor:pointer;
 }
-#announcement .panel .panel-body {
+#dashboard .panel .panel-heading div.course-name{
+	float:left;
+	font-size:20px;
+}
+#dashboard .panel .panel-heading h2{
+	clear:left;
+	padding-left: 10px;
+}
+#dashboard .panel .panel-body {
 	overflow-y:hidden;
 }

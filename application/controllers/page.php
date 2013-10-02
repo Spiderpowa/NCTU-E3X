@@ -11,4 +11,9 @@ class Page extends CI_Controller {
 	{
 		$this->load->template('page/disclaimer');
 	}
+	
+	public function channel()
+	{
+		$this->load->view('page/channel');
+	}
 }

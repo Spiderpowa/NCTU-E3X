@@ -10,7 +10,6 @@
 <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet">
-<link href="/css/bootstrap-editable.css" type="text/css" rel="stylesheet" />
 <?=load_css('style.css');?>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="/js/jquery.rest.min.js?v=0.0.7"></script>
@@ -29,13 +28,28 @@ bootbox.setDefaults({locale:'zh_TW'});
 </head>
 <body>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<script>
+  window.fbAsyncInit = function() {
+    // init the FB JS SDK
+    FB.init({
+      appId      : '572310832804666',                        // App ID from the app dashboard
+      channelUrl : 'page/channel', // Channel file for x-domain comms
+      status     : true,                                 // Check Facebook Login status
+      xfbml      : true                                  // Look for social plugins on the page
+    });
+
+    // Additional initialization code such as adding Event Listeners goes here
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/zh_TW/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 <div id="header">
   <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -52,7 +66,7 @@ bootbox.setDefaults({locale:'zh_TW'});
         <ul class="nav navbar-nav">
           <li class="divider-vertical"></li>
           <li><a href="/">首頁</a></li>
-          <li><a href="https://facebook.com/" target="_blank">FB粉絲團</a></li>
+          <li><a href="https://facebook.com/pages/NCTU-E3X/424403950997740" target="_blank">FB粉絲團</a></li>
           <? if($session_user){?>
           <li><a href="#">Hi <?=$session_user['name'];?></a></li>
           <li class="dropdown">

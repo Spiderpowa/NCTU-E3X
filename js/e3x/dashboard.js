@@ -1,15 +1,19 @@
 var course_list = new Array();
+/* Announcement */
 var announcement = new Array();
 var getCourseList = function(){
 	$('.course_list').each(function(i, e){
-		course_list.push($(e).data('id'));
+		course_list.push({
+			id:$(e).data('id'),
+			name:$(e).data('name')
+		});
 	});
 }
 
 var getLatestAnnounce = function(){
 	var client = new $.RestClient('/API/');
 	client.add('announce');
-	var req = client.announce.read('login').done(function(data){
+	var req = client.announce.read('login').always(function(data){
 		api_error_handle(data);
 		announcement = new Array();
 		$('#announcement .loading').remove();
@@ -17,27 +21,12 @@ var getLatestAnnounce = function(){
 		$('#announcement .panel').remove();
 		var action_bar = $('.hide .announcement-action');
 		for(var i=0; i<data.length; ++i){
-			var container = $('<div id="announcement-entry-'+i+'">').appendTo($('#announcement'));
-			var header = $('<div>').appendTo(container);
-			var body = $('<div id="announcement-entry-body-'+i+'">').appendTo(container);
-			container.addClass('panel');
-			header.addClass('panel-heading');
-			body.addClass('panel-body');
 			var ann = data[i];
 			announcement.push(ann);
-			header.html('<h2>'+ann.Caption+' <small>'+ann.BeginDate+'</small></h2>');
-			header.click(function(){
-				var obj = $($(this).data('target'));
-				obj.collapse('toggle');
+			$.extend(ann, {
+				type:'announcement'
 			});
-			header.data('target', '#announcement-entry-body-'+i);
-			body.html(ann.Content);
-			body.addClass('collapse in');
-			var bar = action_bar.clone(true);
-			body.prepend(bar);
-			bar.data('id', i);
-			bar.data('container', '#announcement-entry-'+i);
-			bar.find('button').tooltip();
+			genPanel(ann, i);
 		}
 		applyAnnounceFlag();
 	});
@@ -102,7 +91,7 @@ var applyAnnounceFlag = function(){
 	}
 }
 
-var setFlag = function(){
+var setAnnounceFlag = function(){
 	var container = $($(this).parent().data('container'));
 	var id = $(this).parent().data('id');
 	var flag = $(this).data('flag');
@@ -151,7 +140,7 @@ var initAnnounceComponent = function(){
 		applyAnnounceFilter();
 	});
 	//Action Bar
-	$('.hide .announcement-action button').click(setFlag);
+	$('.hide .announcement-action button').click(setAnnounceFlag);
 	//Hide All Announcement
 	$('#read-all-announcement').click(function(){
 		bootbox.confirm('全部標記成已讀?', function(result){
@@ -189,7 +178,166 @@ var applyAnnounceFilter = function(){
 		$('#hidden-announcement').hide();
 	}
 }
+/* Homework */
+var homework = new Array();
+var homeworkDone = 0;
+var getHomeworkList = function(){
+	homework = new Array();
+	homeworkDone = 0;
+	var client = new $.RestClient('/API/');
+	client.add('homework');
+	var renderHomework = function(){
+		$('#homework .loading').remove();
+		$('#tab-homework img').remove();
+		$('#homework .panel').remove();
+		for(var i=0; i<homework.length; ++i){
+			var data = homework[i];
+			var content = '<div class="homework-due-date">截止日期:<span>'+data.EndDate+'</span></div>'+
+				'<div class="homework-submit-type">繳交方式:<span>'+data.SubmitType+'</span></div>';
+			var hw = {
+				type:'homework',
+				id:data.id,
+				Caption:data.DisplayName,
+				BeginDate:data.BeginDate,
+				Content:content
+			};
+			genPanel(hw, i);
+		}
+		applyHomeworkFlag();
+		
+	}
+	var processHWList = function(data){
+		api_error_handle(data);
+		for(var i=0; i<data.length; ++i){
+			homework.push(data[i]);
+		}
+		++homeworkDone;
+		if(homeworkDone == 2){
+			renderHomework();
+		}
+	}
+	client.homework.read('1').always(processHWList);//todo hw
+	client.homework.read('3').always(processHWList);//due hw
+}
 
+var applyHomeworkFlag = function(){
+	var unread = 0;
+	var newDiv = $('<div>').addClass('label label-danger pull-right').text('New');
+	var dueDiv = $('<span>').append($('<div>').addClass('label label-danger').text('遲交')).append(' ');
+	var starDiv = $('<div>').addClass('label label-warning pull-right').append('<span class="glyphicon glyphicon-star"></span>');
+	$('#tab-homework a .badge').remove();
+	$('#homework .panel .label').remove();
+	for(var i=0; i<homework.length; ++i){
+		var entry = homework[i];
+		var container = $('#homework-entry-'+i);
+		var header = container.find('.panel-heading');
+		var body = container.find('.panel-body');
+		//Remove previous
+		container.removeClass(function(i, css){
+			return (css.match (/\b(panel-|filter_)\S+/g) || []).join(' ');
+		});
+		//Process Flag
+		var star = false;
+		if(entry.flag.indexOf('star') != -1){//Star
+			star = true;
+			header.prepend(starDiv.clone());
+			container.data('star', 'true');
+			body.find('button.no-star').attr('disabled', 'disabled');
+		}else{
+			container.removeData('star');
+			body.find('button.no-star').attr('disabled', false);
+		}
+		if(entry.type == 1){//Due
+			++unread;
+			header.find('h2').prepend(dueDiv.clone());
+			container.addClass('panel-warning');
+			container.appendTo('#due-homework');
+			body.find('button').attr('disabled', 'disabled');
+		}else if(entry.flag.indexOf('read') == -1){//Unread
+			if(!star){
+				++unread;
+				header.prepend(newDiv.clone());
+			}
+			container.addClass('panel-primary');
+			container.appendTo('#unread-homework');
+		}else{
+			container.addClass('panel-default');
+			container.appendTo('#read-homework');
+			body.collapse();
+		}
+	}
+	if(unread > 0){
+		var unread_div = $('<div>').prependTo($('#tab-homework a'));
+		unread_div.addClass('badge pull-right');
+		unread_div.text(unread);
+	}
+}
+
+var setHomeworkFlag = function(){
+	var container = $($(this).parent().data('container'));
+	var id = $(this).parent().data('id');
+	var flag = $(this).data('flag');
+	var hw = homework[id];
+	var hw_id = hw.HomeworkId;
+	var client =  new $.RestClient('/API/');
+	client.add('flag');
+	var action = '';
+	var data = {type:'homework', id:hw_id, flag:flag};
+	if(flag == 'star' && container.data('star')){//unstar
+		action = 'remove';
+	}
+	if (flag == 'star' && !container.data('star')){//star
+		//remove all other flags
+		hw.flag = new Array();
+		(function(data){
+			var flagdata = $.extend(true, {}, data);//Deep Copy
+			flagdata.flag = null;
+			client.flag.create('remove', flagdata).done(function(data){
+				api_error_handle(data);
+				flagdata.flag = 'star';
+				client.flag.create(action, flagdata).done(api_error_handle);
+			});
+		})(data);
+	}else{
+		client.flag.create(action, data).done(api_error_handle);
+	}
+	if(action == 'remove'){
+		container.removeData(flag);
+		var index;
+		while((index = hw.flag.indexOf(flag)) != -1){
+			hw.flag.splice(index, 1);
+		}
+	}else{
+		hw.flag.push(flag);
+	}
+	applyHomeworkFlag();
+}
+
+var initHomeworkComponent = function(){
+	//Action Bar
+	$('.hide .homework-action button').click(setHomeworkFlag);
+	//Hide All Announcement
+	$('#read-all-homework').click(function(){
+		bootbox.confirm('全部標記成已讀?', function(result){
+			if(result){
+				var ids = new Array();
+				$.each(homework, function(i, e){
+					if(e.flag.indexOf('star')!=-1)return;
+					ids.push(e.HomeworkId);
+					e.flag.push('read');
+				});
+				var client =  new $.RestClient('/API/');
+				client.add('flag');
+				client.flag.create({type:'homework', id:ids.toString(), flag:'read'}).done(function(data){
+					api_error_handle(data);
+				});
+				applyHomeworkFlag();
+			}
+		});
+	});
+}
+
+/* General */
 var addLoading = function(){
 	$('.tab-pane').append(loadingDiv);
 }
@@ -198,7 +346,34 @@ var loadingDiv = $('<div>').addClass('loading').css('text-align', 'center').text
 	$('<img>').attr('src', '/img/loading.gif')
 );
 
+var genPanel = function(data, i){
+	// data{type, id, Caption, BeginDate Content}
+	var action_bar = $('.hide .'+data.type+'-action');
+	var container = $('<div id="'+data.type+'-entry-'+i+'">').appendTo($('#'+data.type));
+	var header = $('<div>').appendTo(container);
+	var body = $('<div id="'+data.type+'-entry-body-'+i+'">').appendTo(container);
+	container.addClass('panel');
+	header.addClass('panel-heading');
+	body.addClass('panel-body');
+	var courseName = course_list[data.id].name;
+	header.html('<div class="course-name">'+courseName+'</div>' + '<h2>'+data.Caption+' <small>'+data.BeginDate+'</small></h2>');
+	header.click(function(){
+		var obj = $($(this).data('target'));
+		obj.collapse('toggle');
+	});
+	header.data('target', '#'+data.type+'-entry-body-'+i);
+	body.html(data.Content);
+	body.addClass('collapse in');
+	var bar = action_bar.clone(true);
+	body.prepend(bar);
+	bar.data('id', i);
+	bar.data('container', '#'+data.type+'-entry-'+i);
+	bar.find('button').tooltip();
+}
+
 addLoading();
 getCourseList();
 getLatestAnnounce();
 initAnnounceComponent();
+getHomeworkList();
+initHomeworkComponent();
