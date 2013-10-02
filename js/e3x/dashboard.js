@@ -202,9 +202,3 @@ addLoading();
 getCourseList();
 getLatestAnnounce();
 initAnnounceComponent();
-/*
-var client = new $.RestClient('/API/');
-client.add('user');
-var req = client.user.create('login', {id:form.id.value, password:form.password.value}).done(function(data){
-if(data.error){
-	*/

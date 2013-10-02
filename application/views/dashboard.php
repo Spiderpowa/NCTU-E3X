@@ -14,7 +14,7 @@
         <button class="btn btn-primary pull-right" type="button" id="read-all-announcement">全部標記已讀</button>
         <div class="hide">
           <div class="btn-group announcement-action pull-right">
-            <button type="button" class="btn btn-default" data-flag="star" title="重要公告，不能標記成已讀或隱藏" data-placement="bottom"><span class="glyphicon glyphicon-star"></span> 重要</button>
+            <button type="button" class="btn btn-default" data-flag="star" title="重要公告" data-placement="bottom"><span class="glyphicon glyphicon-star"></span> 重要</button>
             <button type="button" class="btn btn-default no-star" data-flag="read" title="已經看過了，放置於下方" data-placement="bottom"><span class="glyphicon glyphicon-check"></span> 已讀</button>
             <button type="button" class="btn btn-default no-star" data-flag="hidden" title="不是很重要的公告，隱藏起來" data-placement="bottom"><span class="glyphicon glyphicon-eye-close"></span> 隱藏</button>
           </div>

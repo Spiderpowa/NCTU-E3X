@@ -106,5 +106,5 @@ a[name] {
 	cursor:pointer;
 }
 #announcement .panel .panel-body {
-	overflow:hidden;
+	overflow-y:hidden;
 }
