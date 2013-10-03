@@ -56,12 +56,12 @@
     </div>
   </div>
   <div class="col-md-4">
-    <ul class="list-group">
-      <li class="list-group-item active">本學期課程</li>
+    <div class="list-group">
+      <div class="list-group-item active">本學期課程</div>
       <? foreach($course as $key => $v){?>
-        <a href="#" id="course-<?=$key;?>" class="list-group-item course_list" data-name="<?=$v['CourseName'];?>" data-id="<?=$key?>"><?=$v['CourseName'];?></a>
+        <a href="/course/dashboard/<?=$key;?>" id="course-<?=$key;?>" class="list-group-item course_list" data-name="<?=$v['CourseName'];?>" data-id="<?=$key?>"><?=$v['CourseName'];?></a>
       <? }?>
-    </ul>
+    </div>
   </div>
 </div>
 <?=load_js('e3x/dashboard.js');?>

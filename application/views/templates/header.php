@@ -73,7 +73,7 @@ bootbox.setDefaults({locale:'zh_TW'});
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">課程列表 <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <? foreach($session_course as $key=>$course){?>
-              <li><a href="/course/<?=$key;?>"><?=$course['CourseName'];?></a></li>
+              <li><a href="/course/dashboard/<?=$key;?>"><?=$course['CourseName'];?></a></li>
               <? }?>
             </ul>
           </li>

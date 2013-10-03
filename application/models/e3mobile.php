@@ -46,13 +46,16 @@ class E3Mobile extends CI_Model{
 		$return = $this->_post('GetCourseList', $data);
 		$courses = array();
 		foreach($return as $course){
-			$courses[] = $this->_fetchXml($course, array('CourseId', 'CourseName', 'TeacherName'));
+      $data =  $this->_fetchXml($course, array('CourseId', 'CourseName', 'TeacherName'));
+      $data['CourseKey'] = count($courses);
+			$courses[] =$data;
 		}
 		return $courses;
 	}
 	
 	function getAnnouncement($ids, $type = 1){
 		if(($test = $this->testTicket())!==true)return $test;
+    if(!is_array($ids))$ids = array($ids);
 		$anns = array();
 		foreach($ids as $id){
 			$data = $this->_genData(array(
@@ -68,7 +71,7 @@ class E3Mobile extends CI_Model{
 		}
 		return $anns;
 	}
-	
+  
 	function getAnnouncementLogin(){
 		if(($test = $this->testTicket())!==true)return $test;
 		$anns = array();
@@ -78,7 +81,7 @@ class E3Mobile extends CI_Model{
 		$return = $this->_post('GetAnnouncementList_Login', $data);
 		foreach($return as $entry){
 			$ann = $this->_fetchXml($entry, array('BulletinId', 'Caption', 'Content', 'BeginDate', 'EndDate'));
-			$ann['id'] = $this->getCourse($entry->CourseId);
+			$ann['id'] = $this->getCourseKey($entry->CourseId);
 			$anns[] = $ann;
 		}
 		return $anns;
@@ -94,12 +97,29 @@ class E3Mobile extends CI_Model{
 		$return = $this->_post('GetStuHomeworkList', $data);
 		foreach($return as $entry){
 			$hw = $this->_fetchXml($entry, array('HomeworkId', 'DisplayName', 'BeginDate', 'EndDate', 'SubmitType'));
-			$hw['id'] = $this->getCourse($courseId);
+			$hw['id'] = $this->getCourseKey($courseId);
 			$hw['type'] = (int)$type;
 			$ass[] = $hw;
 		}
 		return $ass;
 	}
+  
+  function getMaterialDocList($courseId, $type){
+    if(($test = $this->testTicket())!==true)return $test;
+    $docs = array();
+    $data = $this->_genData(array(
+      'courseId' => $courseId,
+      'docType' => $type
+    ));
+    $return = $this->_post('GetMaterialDocList', $data);
+    foreach($return as $entry){
+      $doc = $this->_fetchXml($entry, array('DisplayName', 'BeginDate', 'EndDate', 'DocumentId'));
+      $doc['id'] = $this->getCourseByKey($courseId);
+      $doc['type'] = (int)$type;
+      $docs[] = $doc;
+    }
+    return $docs;
+  }
 	
 	function testTicket(){
 		$data = $this->_genData(array(), true);
@@ -114,7 +134,7 @@ class E3Mobile extends CI_Model{
 	}
 
 	
-	function getCourse($course_id){
+	function getCourseKey($course_id){
 		foreach($this->_Course as $key => $course){
 			if($course_id == $course['CourseId'])
 				return $key;
@@ -122,7 +142,7 @@ class E3Mobile extends CI_Model{
 		return false;
 	}
 	
-	function getCourseId($course){
+	function getCourseByKey($course){
 		return $this->_Course[$course];
 	}
 	
