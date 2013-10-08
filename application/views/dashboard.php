@@ -2,7 +2,7 @@
   <div class="col-md-8">
     <ul class="nav nav-tabs">
       <li id="tab-announcement" class="active"><a href="#announcement" data-toggle="tab">公告 <img src="/img/loading.gif"></a></li>
-      <li id="tab-coursetable"><a href="#coursetable" data-toggle="tab">功課表 <img src="/img/loading.gif"></a></li>
+      <li id="tab-coursetable"><a href="#coursetable" data-toggle="tab">功課表 (開發中)</a></li>
       <li id="tab-document"><a href="#document" data-toggle="tab">教材 <img src="/img/loading.gif"></a></li>
       <li id="tab-homework"><a href="#homework" data-toggle="tab">作業 <img src="/img/loading.gif"></a></li>
     </ul>
@@ -31,6 +31,7 @@
         </div>
       </div>
       <div class="tab-pane" id="coursetable">
+        <h3>開發中 Coming Sooooon</h3>
       </div>
       <div class="tab-pane" id="document">
         <ul class="nav nav-pills pull-left" id="document-filter">
