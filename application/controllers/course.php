@@ -20,7 +20,8 @@ class Course extends CI_Controller {
     $doc1 = $this->e3mobile->getMaterialDocList($key, 1);
     $doc2 = $this->e3mobile->getMaterialDocList($key, 2);
     $doc = array_merge($doc1, $doc2);
-		$this->load->template('course/dashboard', array('course'=>$course, 'announcement'=>$announcement, 'homework'=>$homework, 'document'=>$doc));
+		//$this->load->template('course/dashboard', array('course'=>$course, 'announcement'=>$announcement, 'homework'=>$homework, 'document'=>$doc));
+    $this->load->template('course/dashboard_placeholder', array('course'=>$course, 'announcement'=>$announcement, 'homework'=>$homework, 'document'=>$doc));
 	}
   
   //FB Comment
