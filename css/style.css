@@ -80,6 +80,15 @@ a[name] {
 #registerForm .modal-footer .alert{
 	text-align:center;
 }
+#welcome-comment .panel{
+  box-shadow:none;
+  -webkit-box-shadow:none;
+  border:none;
+}
+#fb-comment-message #fb-comment-message-head img{
+  width:200px;
+  height:200px;
+}
 /* Dashboard */
 #dashboard .tab-content {
 	padding:10px;

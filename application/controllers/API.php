@@ -109,4 +109,18 @@ class Api extends REST_Controller {
 			break;	
 		}
 	}
+  
+  function FB_get($action){
+    $this->load->helper('url');
+    switch($action){
+      case 'comment':
+        $content = file_get_contents('https://graph.facebook.com/comments/?ids='.site_url($this->get('path')));
+        //$content = file_get_contents('https://graph.facebook.com/comments/?ids=https://facebook.com/');
+        $this->response(json_decode($content));
+      break;
+      default:
+        $this->response(null, 400);
+			break;
+    }
+  }
 }

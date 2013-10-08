@@ -20,8 +20,8 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('user');
+		$this->load->helper('url');
 		if(!$this->input->get('noredirect') && $this->user->isLogin()){
-			$this->load->helper('url');
 			redirect('/dashboard');
 		}
 		$this->load->template('welcome_message', array('description' => '全新設計E3系統，直覺、快速、好用'));

@@ -1,3 +1,4 @@
+/* Login & Registeration Model */
 var loginAjax = null;
 var registerAjax = null;
 var modalAlert = function(id, type, msg){
@@ -95,3 +96,73 @@ var parse_parameter = function(){
 };
 
 parse_parameter();
+/* Facebook Comment Show */
+$(window).resize(function(){$('.fb-comments iframe,.fb-comments span:first-child').css({'width':$('#commentboxcontainer').width()});});
+var FBShow = function (){
+  var client;
+  var self = this;
+  var msg;
+  var loopInt = null;
+  var msgIdx;
+  this.init = function (){
+    msg = new Array();
+    client = new $.RestClient('/API/');
+    client.add('FB');
+    var req = client.FB.read('comment', {path:'/'}).done(function(data){
+      $.each(data, function(i, v){
+        parseData(v);
+      });
+      self.startShowLoop();
+    });
+  }
+  var parseData = function(data){
+    for(var i=0; i<data.comments.data.length; ++i){
+      msg.push(data.comments.data[i]);
+    }
+  }
+  var preloadImage = function(){
+    var imgObj = new Image();
+    imgObj.src = 'https://graph.facebook.com/'+msg[msgIdx].from.id+'/picture?type=large&width=200&height=200';
+  }
+  var showNextMessage = function(){
+    var message = msg[msgIdx++];
+    msgIdx %= msg.length;
+    (function(message){
+      console.log('fading');
+      var img = $('#fb-comment-message #fb-comment-message-head img');
+      var quote = $('#fb-comment-message #fb-comment-message-text blockquote p');
+      var from = $('#fb-comment-message #fb-comment-message-text blockquote small');
+      var blockquote = $('#fb-comment-message #fb-comment-message-text blockquote');
+      img.fadeOut(200, function(){
+        img.attr('src', 'https://graph.facebook.com/'+message.from.id+'/picture?type=large&width=200&height=200');
+        img.fadeIn();
+      });
+      blockquote.fadeOut(200, function(){
+        quote.text(message.message);
+        from.text(message.from.name);
+        blockquote.fadeIn();
+      });
+    })(message);
+    preloadImage();
+  }
+  this.startShowLoop = function(){
+    if(loopInt == null){
+      msgIdx = 0;
+      preloadImage();
+      setTimeout(showNextMessage, 1000);
+      loopInt = setInterval(showNextMessage, 5000);
+    }else{
+      stopShowLoop();
+      startShowLoop();
+    }
+  }
+  
+  this.stopShowLoop = function(){
+    if(loopInt == null)return;
+    clearInterval(loopInt);
+    loopInt = null;
+  }
+}
+
+var fbshow = new FBShow();
+fbshow.init();

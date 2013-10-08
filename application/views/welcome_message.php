@@ -12,6 +12,37 @@
   </div>
 </div>
 
+<div id="welcome-comment" class="panel-group">
+  <div class="panel">
+    <div id="fb-comment-show" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <div class="pull-right"><a class="accordion-toggle" data-toggle="collapse" data-parent="#welcome-comment" href="#fb-leave-comment">留下回應</a></div> 
+        <div class="row" id="fb-comment-message">
+          <div class="col-md-4" id="fb-comment-message-head">
+            <img class="img-circle" />
+          </div>
+          <div class="col-md-6" id="fb-comment-message-text">
+            <blockquote>
+              <p>正在讀取Facebook回應...</p>
+              <small class="pull-right"></small>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div id="fb-leave-comment" class="panel-collapse collapse">
+      <div class="panel-body">  
+        <div class="pull-right"><a class="accordion-toggle" data-toggle="collapse" data-parent="#welcome-comment" href="#fb-comment-show">看大家的回應</a></div>
+        <div class="fb-comments" data-href="<?=site_url();?>" data-colorscheme="light" data-num-posts="0" data-width="650"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
 <!-- Login Modal -->
 <form id="loginForm" method="post" role="form">
   <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
