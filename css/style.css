@@ -102,6 +102,9 @@ a[name] {
 #dashboard #announcement #hidden-announcement {
 	display:none;
 }
+#dashboard #announcement #hidden-document {
+	display:none;
+}
 #dashboard .panel .panel-heading {
 	cursor:pointer;
 }
@@ -115,4 +118,8 @@ a[name] {
 }
 #dashboard .panel .panel-body {
 	overflow-y:hidden;
+}
+a.document-attachment{
+  display:block;
+  margin-top:10px;
 }

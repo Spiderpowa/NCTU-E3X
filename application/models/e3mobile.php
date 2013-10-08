@@ -2,6 +2,9 @@
 
 class E3Mobile extends CI_Model{
 	private $_API = 'http://e3.nctu.edu.tw/mService/service.asmx/';
+  private $_MetaType = array(
+    'document' => 10
+  );
 	private $_LoginTicket = NULL;
 	private $_AccountID = NULL;
 	private $_Course = array();
@@ -134,6 +137,24 @@ class E3Mobile extends CI_Model{
 		}
 		return $ass;
 	}
+  
+  function getAttachFileList($resId, $type, $key){
+    if(($test = $this->testTicket())!==true)return $test;
+    $metaType = $this->_MetaType[$type];
+		$files = array();
+    $data = $this->_genData(array(
+      'courseId'=> $this->_Course[$key]['CourseId'],
+      'metaType' => $this->_MetaType[$type],
+      'resId' => $resId
+    ));
+  	$return = $this->_post('GetAttachFileList', $data);
+		foreach($return as $entry){
+			$file = $this->_fetchXml($entry, array('DisplayFileName', 'RealityFileName', 'MimeType', 'FileSize', 'CreateTime'));
+			$file['id'] = $key;
+			$files[] = $file;
+		}
+		return $files;
+  }
 	
 	function testTicket(){
 		$data = $this->_genData(array(), true);

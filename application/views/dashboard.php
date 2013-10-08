@@ -85,4 +85,5 @@
     </div>
   </div>
 </div>
+<?=load_js('e3x/attachment.js');?>
 <?=load_js('e3x/dashboard.js');?>

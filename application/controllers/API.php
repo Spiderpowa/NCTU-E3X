@@ -51,7 +51,7 @@ class Api extends REST_Controller {
 		}else if($docs['error']){
 			$this->response($docs);
 		}else{
-			$this->flag->getFlags('docouncement', $docs);
+			$this->flag->getFlags('document', $docs);
 			$this->response($docs);
 		}
 	}
@@ -90,6 +90,10 @@ class Api extends REST_Controller {
 		}
 		$this->response(array('success'=>$data));
 	}
+  
+  function attachment_get($type = 'document'){
+    $this->response($this->e3mobile->getAttachFileList($this->get('resid'), $type, $this->get('id')));
+  }
 	
 
 	function user_post($action){

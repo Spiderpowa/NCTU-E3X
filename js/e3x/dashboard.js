@@ -144,7 +144,7 @@ var initAnnounceComponent = function(){
 	$('.hide .announcement-action button').click(setAnnounceFlag);
 	//Hide All Announcement
 	$('#read-all-announcement').click(function(){
-		bootbox.confirm('全部標記成已讀?', function(result){
+		bootbox.confirm('封存全部公告?', function(result){
 			if(result){
 				var ids = new Array();
 				$.each(announcement, function(i, e){
@@ -195,7 +195,33 @@ var getDocumentList = function(){
 		for(var i=0; i<data.length; ++i){
 			var doc = data[i];
 			docs.push(doc);
-      var content = doc.Summary?'<h4>摘要</h4>'+doc.Summary+'<div>':'';
+      var downloadLink = $('<a>');
+      downloadLink.attr('href', '#');
+      downloadLink.data('docId', doc.DocumentId);
+      downloadLink.data('courseId', doc.id);
+      downloadLink.text('下載附件');
+      downloadLink.click(function(){
+        getAttachment($(this).data('docId'), 'document', $(this).data('courseId'), function(data){
+          if(0 && data.length == 1)
+            location.href = data[0].RealityFileName;
+          else{
+            var content = $('<div>');
+            content.append('<h2>附件列表</h2>');
+            for(var i=0; i<data.length; ++i){
+              var link = $('<a>');
+              link.text(data[i].DisplayFileName);
+              link.attr('href', data[i].RealityFileName);
+              link.addClass('document-attachment');
+              content.append(link);
+            }
+            bootbox.alert(content.html());
+          }
+        });
+        return false;
+      });
+      var content = $('<div>');
+      if(doc.Summary)content.append('<h4>摘要</h4>'+doc.Summary);
+      content.append(downloadLink);
 			$.extend(doc, {
 				type:'document',
         Caption:doc.DisplayName,
@@ -272,7 +298,7 @@ var setDocumentFlag = function(){
 	var id = $(this).parent().data('id');
 	var flag = $(this).data('flag');
 	var doc = docs[id];
-	var doc_id = doc.BulletinId;
+	var doc_id = doc.DocumentId;
 	var client =  new $.RestClient('/API/');
 	client.add('flag');
 	var action = '';
@@ -319,12 +345,12 @@ var initDocumentComponent = function(){
 	$('.hide .document-action button').click(setDocumentFlag);
 	//Hide All document
 	$('#read-all-document').click(function(){
-		bootbox.confirm('全部標記成已讀?', function(result){
+		bootbox.confirm('封存全部教材?', function(result){
 			if(result){
 				var ids = new Array();
 				$.each(docs, function(i, e){
 					if(e.flag.indexOf('star')!=-1)return;
-					ids.push(e.BulletinId);
+					ids.push(e.DocumentId);
 					e.flag.push('read');
 				});
 				var client =  new $.RestClient('/API/');
@@ -498,7 +524,7 @@ var initHomeworkComponent = function(){
 	$('.hide .homework-action button').click(setHomeworkFlag);
 	//Hide All Announcement
 	$('#read-all-homework').click(function(){
-		bootbox.confirm('全部標記成已讀?', function(result){
+		bootbox.confirm('封存全部作業?', function(result){
 			if(result){
 				var ids = new Array();
 				$.each(homework, function(i, e){
@@ -536,13 +562,13 @@ var genPanel = function(data, i){
 	header.addClass('panel-heading');
 	body.addClass('panel-body');
 	var courseName = course_list[data.id].name;
-	header.html('<div class="course-name">'+courseName+'</div>' + '<h2>'+data.Caption+' <small>'+data.BeginDate+'</small></h2>');
+	header.append('<div class="course-name">'+courseName+'</div>' + '<h2>'+data.Caption+' <small>'+data.BeginDate+'</small></h2>');
 	header.click(function(){
 		var obj = $($(this).data('target'));
 		obj.collapse('toggle');
 	});
 	header.data('target', '#'+data.type+'-entry-body-'+i);
-	body.html(data.Content);
+	body.append(data.Content);
 	body.addClass('collapse in');
 	var bar = action_bar.clone(true);
 	body.prepend(bar);
