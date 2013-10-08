@@ -53,19 +53,19 @@ class E3Mobile extends CI_Model{
 		return $courses;
 	}
 	
-	function getAnnouncement($ids, $type = 1){
+	function getAnnouncement($keys, $type = 1){
 		if(($test = $this->testTicket())!==true)return $test;
-    if(!is_array($ids))$ids = array($ids);
+    if(!is_array($keys))$keys = array($keys);
 		$anns = array();
-		foreach($ids as $id){
+		foreach($keys as $key){
 			$data = $this->_genData(array(
-				'courseId'=> $this->_Course[$id]['CourseId'],
+				'courseId'=> $this->_Course[$key]['CourseId'],
 				'bulType' => $type
 			));
 			$return = $this->_post('GetStuAnnouncementList', $data);
 			foreach($return as $entry){
 				$ann = $this->_fetchXml($entry, array('BulletinId', 'Caption', 'Content', 'BeginDate', 'EndDate'));
-				$ann['id'] = $id;
+				$ann['id'] = $key;
 				$anns[] = $ann;
 			}
 		}
@@ -86,40 +86,54 @@ class E3Mobile extends CI_Model{
 		}
 		return $anns;
 	}
+  
+  function getMaterialDocList($keys, $type){
+		if(($test = $this->testTicket())!==true)return $test;
+    if(!is_array($keys))$keys = array($keys);
+		$docs = array();
+		foreach($keys as $key){
+			$data = $this->_genData(array(
+				'courseId'=> $this->_Course[$key]['CourseId'],
+				'docType' => $type
+			));
+			$return = $this->_post('GetMaterialDocList', $data);
+			foreach($return as $entry){
+				$doc = $this->_fetchXml($entry, array('DocumentId', 'DisplayName', 'BeginDate', 'EndDate', 'Summary'));
+				$doc['id'] = $key;
+				$docs[] = $doc;
+			}
+		}
+		return $docs;
+  }
+  
+  function getMaterialDocSummary($docId){
+		if(($test = $this->testTicket())!==true)return $test;
+    if(!is_array($keys))$keys = array($keys);
+		$data = $this->_genData(array(
+			'docId' => $docId
+		));
+		$return = $this->_post('GetMaterialDocSummary', $data);
+		$doc = $this->_fetchXml($return, array('DocumentId', 'DisplayName', 'BeginDate', 'EndDate'));
+		$doc['id'] = $this->getCourseKey($entry->CourseId);
+		return $doc;
+  }
 	
-	function getStuHomeworkList($courseId, $type){
+	function getStuHomeworkList($key, $type){
 		if(($test = $this->testTicket())!==true)return $test;
 		$ass = array();
 		$data = $this->_genData(array(
-			'courseId' => $courseId,
+			'courseId' => $this->_Course[$key]['CourseId'],
 			'listType' => $type
 		), true);
 		$return = $this->_post('GetStuHomeworkList', $data);
 		foreach($return as $entry){
 			$hw = $this->_fetchXml($entry, array('HomeworkId', 'DisplayName', 'BeginDate', 'EndDate', 'SubmitType'));
-			$hw['id'] = $this->getCourseKey($courseId);
+			$hw['id'] = $key;
 			$hw['type'] = (int)$type;
 			$ass[] = $hw;
 		}
 		return $ass;
 	}
-  
-  function getMaterialDocList($courseId, $type){
-    if(($test = $this->testTicket())!==true)return $test;
-    $docs = array();
-    $data = $this->_genData(array(
-      'courseId' => $courseId,
-      'docType' => $type
-    ));
-    $return = $this->_post('GetMaterialDocList', $data);
-    foreach($return as $entry){
-      $doc = $this->_fetchXml($entry, array('DisplayName', 'BeginDate', 'EndDate', 'DocumentId'));
-      $doc['id'] = $this->getCourseByKey($courseId);
-      $doc['type'] = (int)$type;
-      $docs[] = $doc;
-    }
-    return $docs;
-  }
 	
 	function testTicket(){
 		$data = $this->_genData(array(), true);

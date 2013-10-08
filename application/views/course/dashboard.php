@@ -37,4 +37,4 @@
     <div class="fb-comments" data-href="<?=site_url('/course/comment/'.$course['CourseId']);?>" data-colorscheme="light" data-width="470"></div>
   </div>
 </div>
-<?=load_js('e3x/dashboard.js');?>
+

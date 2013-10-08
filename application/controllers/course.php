@@ -14,9 +14,11 @@ class Course extends CI_Controller {
 		$course = $this->e3mobile->getCourseByKey($key);
     $courseId = $course['CourseId'];
     $announcement = $this->e3mobile->getAnnouncement($key);
-    $homework = $this->e3mobile->getStuHomeworkList($courseId, 1);
-    $doc1 = $this->e3mobile->getMaterialDocList($courseId, 1);
-    $doc2 = $this->e3mobile->getMaterialDocList($courseId, 2);
+    $homework1 = $this->e3mobile->getStuHomeworkList($key, 1);
+    $homework2 = $this->e3mobile->getStuHomeworkList($key, 3);
+    $homework = array_merge($homework1, $homework2);
+    $doc1 = $this->e3mobile->getMaterialDocList($key, 1);
+    $doc2 = $this->e3mobile->getMaterialDocList($key, 2);
     $doc = array_merge($doc1, $doc2);
 		$this->load->template('course/dashboard', array('course'=>$course, 'announcement'=>$announcement, 'homework'=>$homework, 'document'=>$doc));
 	}

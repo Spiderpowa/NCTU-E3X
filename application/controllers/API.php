@@ -29,6 +29,32 @@ class Api extends REST_Controller {
 			$this->response($anns);
 		}
 	}
+  
+  function document_get($action, $type = 1){
+    $course = $this->e3mobile->getAllCourse();
+		if($this->get('id')){
+			$ids = explode(',', $this->get('id'));
+		}else{
+			$ids = range(0, count($course)-1);
+		}
+		$docs = NULL;
+		switch($action){
+			case 'id':
+				$docs = $this->e3mobile->getMaterialDocList($ids, $type);
+				break;
+			case 'summary':
+				$docs = $this->e3mobile->getMaterialDocSummary($ids);
+				break;
+		}
+		if($docs == NULL){
+			$this->response(array('error'=>'Unknown Action:'.$action));
+		}else if($docs['error']){
+			$this->response($docs);
+		}else{
+			$this->flag->getFlags('docouncement', $docs);
+			$this->response($docs);
+		}
+	}
 	
 	function homework_get($type){
 		$course = $this->e3mobile->getAllCourse();
@@ -39,7 +65,7 @@ class Api extends REST_Controller {
 		}
 		$hw = array();
 		foreach($ids as $id){
-			$tmp = array_merge($hw, $this->e3mobile->getStuHomeworkList($course[$id]['CourseId'], $type));
+			$tmp = array_merge($hw, $this->e3mobile->getStuHomeworkList($id, $type));
 			$hw = $tmp;
 		}
 		$this->flag->getFlags('homework', $hw);

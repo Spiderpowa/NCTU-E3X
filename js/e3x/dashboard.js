@@ -1,6 +1,4 @@
 var course_list = new Array();
-/* Announcement */
-var announcement = new Array();
 var getCourseList = function(){
 	$('.course_list').each(function(i, e){
 		course_list.push({
@@ -9,6 +7,9 @@ var getCourseList = function(){
 		});
 	});
 }
+
+/* Announcement */
+var announcement = new Array();
 
 var getLatestAnnounce = function(){
 	var client = new $.RestClient('/API/');
@@ -176,6 +177,181 @@ var applyAnnounceFilter = function(){
 	}else{
 		$('.announcement-container').show();
 		$('#hidden-announcement').hide();
+	}
+}
+/* Document */
+var docs = new Array();
+
+var getDocumentList = function(){
+	var client = new $.RestClient('/API/');
+	client.add('document');
+	var req = client.document.read('id').always(function(data){
+		api_error_handle(data);
+		docs = new Array();
+		$('#document .loading').remove();
+		$('#tab-document img').remove();
+		$('#document .panel').remove();
+		var action_bar = $('.hide .document-action');
+		for(var i=0; i<data.length; ++i){
+			var doc = data[i];
+			docs.push(doc);
+      var content = doc.Summary?'<h4>摘要</h4>'+doc.Summary+'<div>':'';
+			$.extend(doc, {
+				type:'document',
+        Caption:doc.DisplayName,
+        Content:content,
+        BeginDate:''//We dont need this
+			});
+			genPanel(doc, i);
+		}
+		applyDocumentFlag();
+	});
+}
+
+var applyDocumentFlag = function(){
+	var unread = 0;
+	var newDiv = $('<div>').addClass('label label-danger pull-right').text('New');
+	var hideDiv = $('<div>').addClass('label label-info pull-right').text('Hidden');
+	var starDiv = $('<div>').addClass('label label-warning pull-right').append('<span class="glyphicon glyphicon-star"></span>');
+	$('#tab-document a .badge').remove();
+	$('#document .panel .label').remove();
+	for(var i=0; i<docs.length; ++i){
+		var doc = docs[i];
+		var container = $('#document-entry-'+i);
+		var header = container.find('.panel-heading');
+		var body = container.find('.panel-body');
+		//Remove previous
+		container.removeClass(function(i, css){
+			return (css.match (/\b(panel-|filter_)\S+/g) || []).join(' ');
+		});
+		//Process Flag
+		var hidden = false, star = false;
+		if(doc.flag.indexOf('hidden') != -1){//Hidden
+			hidden = true;
+			header.prepend(hideDiv.clone());
+			container.addClass('panel-info');
+			container.appendTo('#hidden-document');
+		}
+		if(doc.flag.indexOf('star') != -1){//Star
+			star = true;
+			header.prepend(starDiv.clone());
+			container.data('star', 'true');
+			body.find('button.no-star').attr('disabled', 'disabled');
+		}else{
+			container.removeData('star');
+			body.find('button.no-star').attr('disabled', false);
+		}
+		
+		if(doc.flag.indexOf('read') == -1){//Unread
+			if(!hidden && !star){
+				++unread;
+				header.prepend(newDiv.clone());
+			}
+			if(!hidden){
+				container.addClass('panel-primary');
+				container.appendTo('#unread-document');
+			}
+		}else if(!hidden){
+			container.addClass('panel-default');
+			container.appendTo('#read-document');
+			body.collapse();
+		}
+		for(var j=0; j<doc.flag.length; ++j){
+			container.addClass('filter_'+doc.flag[j]);
+		}
+	}
+	if(unread > 0){
+		var unread_div = $('<div>').prependTo($('#tab-document a'));
+		unread_div.addClass('badge pull-right');
+		unread_div.text(unread);
+	}
+}
+
+var setDocumentFlag = function(){
+	var container = $($(this).parent().data('container'));
+	var id = $(this).parent().data('id');
+	var flag = $(this).data('flag');
+	var doc = docs[id];
+	var doc_id = doc.BulletinId;
+	var client =  new $.RestClient('/API/');
+	client.add('flag');
+	var action = '';
+	var data = {type:'document', id:doc_id, flag:flag};
+	if(flag == 'star' && container.data('star')){//unstar
+		action = 'remove';
+	}
+	if (flag == 'star' && !container.data('star')){//star
+		//remove all other flags
+		doc.flag = new Array();
+		(function(data){
+			var flagdata = $.extend(true, {}, data);//Deep Copy
+			flagdata.flag = null;
+			client.flag.create('remove', flagdata).done(function(data){
+				api_error_handle(data);
+				flagdata.flag = 'star';
+				client.flag.create(action, flagdata).done(api_error_handle);
+			});
+		})(data);
+	}else{
+		client.flag.create(action, data).done(api_error_handle);
+	}
+	if(action == 'remove'){
+		container.removeData(flag);
+		var index;
+		while((index = doc.flag.indexOf(flag)) != -1){
+			doc.flag.splice(index, 1);
+		}
+	}else{
+		doc.flag.push(flag);
+	}
+	applyDocumentFlag();
+	applyDocumentFilter();
+}
+
+var initDocumentComponent = function(){
+	//Filter
+	var filter = $('#document-filter li a');
+	filter.click(function(){
+		$(this).parent().toggleClass('active');
+		applyDocumentFilter();
+	});
+	//Action Bar
+	$('.hide .document-action button').click(setDocumentFlag);
+	//Hide All document
+	$('#read-all-document').click(function(){
+		bootbox.confirm('全部標記成已讀?', function(result){
+			if(result){
+				var ids = new Array();
+				$.each(docs, function(i, e){
+					if(e.flag.indexOf('star')!=-1)return;
+					ids.push(e.BulletinId);
+					e.flag.push('read');
+				});
+				var client =  new $.RestClient('/API/');
+				client.add('flag');
+				client.flag.create({type:'document', id:ids.toString(), flag:'read'}).done(function(data){
+					api_error_handle(data);
+				});
+				applyDocumentFlag();
+				applyDocumentFilter();
+			}
+		});
+	});
+}
+
+var applyDocumentFilter = function(){
+	var active_filter = new Array();
+	var filter = $('#document-filter li a');
+	$.each(filter, function(i, e){
+		if($(e).parent().hasClass('active'))
+			active_filter.push($(e).data('filter'));
+	});
+	if(active_filter.indexOf('hidden') != -1){
+		$('.document-container').hide();
+		$('#hidden-document').show();
+	}else{
+		$('.document-container').show();
+		$('#hidden-document').hide();
 	}
 }
 /* Homework */
@@ -379,5 +555,7 @@ addLoading();
 getCourseList();
 getLatestAnnounce();
 initAnnounceComponent();
+getDocumentList();
+initDocumentComponent();
 getHomeworkList();
 initHomeworkComponent();
