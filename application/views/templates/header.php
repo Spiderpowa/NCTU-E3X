@@ -2,7 +2,8 @@
 <html lang="zh">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta property="og:image" content="https://graph.facebook.com/1403815759848058/picture?width=200&height=200" />
 <title>E3X<? if(isset($title)){echo ' - '.html_escape($title);}?></title>
 <? if(isset($description)){?>
 <meta name="description" content="<?=html_escape($description);?>" />
