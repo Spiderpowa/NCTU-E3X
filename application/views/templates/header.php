@@ -4,6 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta property="og:image" content="https://graph.facebook.com/1403815759848058/picture?width=200&height=200" />
+<meta property="fb:app_id" content="572310832804666"/>
+<meta property="fb:admins" content="1449616088"/>
 <title>E3X<? if(isset($title)){echo ' - '.html_escape($title);}?></title>
 <? if(isset($description)){?>
 <meta name="description" content="<?=html_escape($description);?>" />
