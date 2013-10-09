@@ -137,7 +137,11 @@ var initAnnounceComponent = function(){
 	//Filter
 	var filter = $('#announcement-filter li a');
 	filter.click(function(){
-		$(this).parent().toggleClass('active');
+    var a = $(this);
+    var tmp = a.text();
+    a.text(a.data('toggle-text'));
+    a.data('toggle-text', tmp);
+		a.parent().toggleClass('active');
 		applyAnnounceFilter();
 	});
 	//Action Bar
@@ -338,7 +342,12 @@ var initDocumentComponent = function(){
 	//Filter
 	var filter = $('#document-filter li a');
 	filter.click(function(){
-		$(this).parent().toggleClass('active');
+    var a = $(this);
+    console.log(a.data('toggle-text'));
+    var tmp = a.text();
+    a.text(a.data('toggle-text'));
+    a.data('toggle-text', tmp);
+		a.parent().toggleClass('active');
 		applyDocumentFilter();
 	});
 	//Action Bar

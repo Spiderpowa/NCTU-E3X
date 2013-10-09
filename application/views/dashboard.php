@@ -9,7 +9,7 @@
     <div class="tab-content">
       <div class="tab-pane active" id="announcement">
         <ul class="nav nav-pills pull-left" id="announcement-filter">
-          <li><a href="#" data-filter="hidden">顯示隱藏</a></li>
+          <li><a href="#" data-filter="hidden" data-toggle-text="顯示一般">顯示隱藏</a></li>
         </ul>
         <button class="btn btn-primary pull-right" type="button" id="read-all-announcement">全部封存</button>
         <div class="hide">
@@ -34,7 +34,7 @@
       </div>
       <div class="tab-pane" id="document">
         <ul class="nav nav-pills pull-left" id="document-filter">
-          <li><a href="#" data-filter="hidden">顯示隱藏</a></li>
+          <li><a href="#" data-filter="hidden" data-toggle-text="顯示一般">顯示隱藏</a></li>
         </ul>
         <button class="btn btn-primary pull-right" type="button" id="read-all-document">全部封存</button>
         <div class="hide">
