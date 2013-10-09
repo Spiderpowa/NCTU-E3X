@@ -7,7 +7,13 @@ var getCourseList = function(){
 		});
 	});
 }
-
+var sort_important = function(a, b){
+  var astar = a.flag.indexOf('star') != -1;
+  var bstar = b.flag.indexOf('star') != -1;
+  if(astar && !bstar)return -1;
+  else if(bstar && !astar)return 1;
+  return ((a.BeginDate < b.BeginDate) ? 1 : ((a.BeginDate > b.BeginDate) ? -1: 0 ));
+}
 /* Announcement */
 var announcement = new Array();
 
@@ -16,6 +22,7 @@ var getLatestAnnounce = function(){
 	client.add('announce');
 	var req = client.announce.read('login').always(function(data){
 		api_error_handle(data);
+    data.sort(sort_important);
 		announcement = new Array();
 		$('#announcement .loading').remove();
 		$('#tab-announcement img').remove();
@@ -191,6 +198,7 @@ var getDocumentList = function(){
 	client.add('document');
 	var req = client.document.read('id').always(function(data){
 		api_error_handle(data);
+    data.sort(sort_important);
 		docs = new Array();
 		$('#document .loading').remove();
 		$('#tab-document img').remove();
@@ -343,7 +351,6 @@ var initDocumentComponent = function(){
 	var filter = $('#document-filter li a');
 	filter.click(function(){
     var a = $(this);
-    console.log(a.data('toggle-text'));
     var tmp = a.text();
     a.text(a.data('toggle-text'));
     a.data('toggle-text', tmp);
