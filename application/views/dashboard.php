@@ -1,13 +1,30 @@
 <div class="row" id="dashboard">
   <div class="col-md-8">
     <ul class="nav nav-tabs">
-      <li id="tab-announcement" class="active"><a href="#announcement" data-toggle="tab">公告 <img src="/img/loading.gif"></a></li>
+      <li id="tab-e3xmessage" class="active"><a href="#e3xmessage" data-toggle="tab">E3X <img src="/img/loading.gif"></a></li>
+      <li id="tab-announcement"><a href="#announcement" data-toggle="tab">公告 <img src="/img/loading.gif"></a></li>
       <li id="tab-coursetable"><a href="#coursetable" data-toggle="tab">功課表 <img src="/img/loading.gif"></a></li>
       <li id="tab-document"><a href="#document" data-toggle="tab">教材 <img src="/img/loading.gif"></a></li>
       <li id="tab-homework"><a href="#homework" data-toggle="tab">作業 <img src="/img/loading.gif"></a></li>
     </ul>
     <div class="tab-content">
-      <div class="tab-pane active" id="announcement">
+      <div class="tab-pane active" id="e3xmessage">
+        <button class="btn btn-primary pull-right" type="button" id="read-all-e3xmessage">全部封存</button>
+        <div class="hide">
+          <div class="btn-group e3xmessage-action pull-right">
+            <button type="button" class="btn btn-default star" data-flag="star" title="重要訊息" data-placement="left"><span class="glyphicon glyphicon-star"></span> 重要</button>
+            <button type="button" class="btn btn-default no-star" data-flag="read" title="封存放置於下方" data-placement="left"><span class="glyphicon glyphicon-save"></span> 封存</button>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="e3x-container" id="unread-e3xmessage">
+          <h4>重要訊息</h4>
+        </div>
+        <div class="e3x-container" id="read-e3xmessage">
+          <h4>封存訊息</h4>
+        </div>
+      </div>
+      <div class="tab-pane" id="announcement">
         <ul class="nav nav-pills pull-left" id="announcement-filter">
           <li><a href="#" data-filter="hidden" data-toggle-text="顯示一般">顯示隱藏</a></li>
         </ul>
@@ -64,10 +81,10 @@
           </div>
         </div>
         <div class="clearfix"></div>
-        <div class="homeworkt-container" id="due-homework">
+        <div class="homework-container" id="due-homework">
           <h4>逾期作業</h4>
         </div>
-        <div class="homeworkt-container" id="unread-homework">
+        <div class="homework-container" id="unread-homework">
           <h4>重要作業</h4>
         </div>
         <div class="homework-container" id="read-homework">

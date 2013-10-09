@@ -63,7 +63,8 @@ class Flag extends CI_Model{
 		$data = array(
 			'announcement'=>'BulletinId',
 			'homework'=>'HomeworkId',
-      'document'=>'DocumentId'
+      'document'=>'DocumentId',
+      'e3xmessage'=>'id'
 		);
 		return $data[$type];
 	}
