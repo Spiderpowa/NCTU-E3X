@@ -69,7 +69,7 @@ bootbox.setDefaults({locale:'zh_TW'});
         <ul class="nav navbar-nav">
           <li class="divider-vertical"></li>
           <li><a href="/">首頁</a></li>
-          <li><a href="https://www.facebook.com/pages/NCTU-E3X/1403815759848058" target="_blank">FB粉絲團</a></li>
+          <li><a href="https://www.facebook.com/NCTU.E3X" target="_blank">FB粉絲團</a></li>
           <? if($session_user){?>
           <li><a href="#">Hi <?=$session_user['name'];?></a></li>
           <li class="dropdown">
