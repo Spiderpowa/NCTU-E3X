@@ -142,7 +142,7 @@ var initE3XMessageComponent = function(){
 				var ids = new Array();
 				$.each(e3xmessage, function(i, e){
 					if(e.flag.indexOf('star')!=-1)return;
-					ids.push(e.E3XMessageId);
+					ids.push(e.id);
 					e.flag.push('read');
 				});
 				var client =  new $.RestClient('/API/');
