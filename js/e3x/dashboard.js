@@ -576,7 +576,25 @@ var genPanel = function(data, i){
 	bar.data('container', '#'+data.type+'-entry-'+i);
 	bar.find('button').tooltip();
 }
-
+/* Remember Tab */
+$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+  $.cookie('last_view_tab', $(e.target).attr('href'), {expires:365});
+});
+if($.cookie('last_view_tab')){
+  $('.nav-tabs a[href="'+$.cookie('last_view_tab')+'"]').tab('show');
+}
+/* Analyze */
+$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+  ga('send', 'event', 'click', 'dashboard-tab', $(e.target).attr('href'));
+});
+$.each(['announcement-action', 'document-action', 'homework-action'], function(i, e){
+  $('.'+e+' button').on('click', function(){
+    ga('send', 'event', 'click', e, $(this).data('flag'));
+  });
+});
+$('[id^=read-all-').on('click', function(){
+  ga('send', 'event', 'click', $(this).attr('id').split('-')[2]+'-action', 'read-all');
+});
 addLoading();
 getCourseList();
 getLatestAnnounce();
