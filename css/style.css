@@ -111,7 +111,7 @@ a[name] {
 #dashboard #announcement #hidden-announcement {
 	display:none;
 }
-#dashboard #announcement #hidden-document {
+#dashboard #document #hidden-document {
 	display:none;
 }
 #dashboard .panel .panel-heading {

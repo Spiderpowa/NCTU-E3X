@@ -8,6 +8,15 @@ class Api extends REST_Controller {
 		$this->load->model('flag');
 		$this->user->sessionLogin();
 	}
+  
+  function message_get(){
+    if(!$this->user->isLogin())return $this->response(array('error'=>'Please Login First'));
+    $this->load->model('message');
+    $user = $this->user->getUser();
+    $msg = $this->message->getMessageByUId($user['id']);
+    $this->flag->getFlags('e3xmessage', $msg);
+		$this->response($msg);
+  }
 	
 	function announce_get($action, $type = 1){
 		$anns = NULL;

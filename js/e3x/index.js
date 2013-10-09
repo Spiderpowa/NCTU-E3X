@@ -128,7 +128,6 @@ var FBShow = function (){
     var message = msg[msgIdx++];
     msgIdx %= msg.length;
     (function(message){
-      console.log('fading');
       var img = $('#fb-comment-message #fb-comment-message-head img');
       var quote = $('#fb-comment-message #fb-comment-message-text blockquote p');
       var from = $('#fb-comment-message #fb-comment-message-text blockquote small');

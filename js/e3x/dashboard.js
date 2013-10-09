@@ -6,6 +6,154 @@ var getCourseList = function(){
 			name:$(e).data('name')
 		});
 	});
+  course_list.push({
+    id:course_list.length,
+    name:'E3X系統公告'
+  });
+}
+var sort_important = function(a, b){
+  var astar = a.flag.indexOf('star') != -1;
+  var bstar = b.flag.indexOf('star') != -1;
+  if(astar && !bstar)return -1;
+  else if(bstar && !astar)return 1;
+  return ((a.BeginDate < b.BeginDate) ? 1 : ((a.BeginDate > b.BeginDate) ? -1: 0 ));
+}
+/* E3X Message */
+var e3xmessage = new Array();
+var getE3XMessageList = function(){
+	e3xmessage = new Array();
+	var client = new $.RestClient('/API/');
+	client.add('message');
+	client.message.read().always(function(data){
+		$('#e3xmessage .loading').remove();
+		$('#tab-e3xmessage img').remove();
+		$('#e3xmessage .panel').remove();
+    data.sort(sort_important);
+		for(var i=0; i<data.length; ++i){
+			var e3xmsg = data[i];
+      e3xmessage.push(data[i]);
+			var msg = {
+				type:'e3xmessage',
+				id:course_list.length-1,
+        aid:e3xmsg.id,
+				Caption:e3xmsg.title,
+				BeginDate:e3xmsg.time,
+				Content:e3xmsg.content
+			};
+			genPanel(msg, i);
+		}
+		applyE3XMessageFlag();
+  });
+}
+
+var applyE3XMessageFlag = function(){
+	var unread = 0;
+	var newDiv = $('<div>').addClass('label label-danger pull-right').text('New');
+	var starDiv = $('<div>').addClass('label label-warning pull-right').append('<span class="glyphicon glyphicon-star"></span>');
+	$('#tab-e3xmessage a .badge').remove();
+	$('#e3xmessage .panel .label').remove();
+	for(var i=0; i<e3xmessage.length; ++i){
+		var entry = e3xmessage[i];
+		var container = $('#e3xmessage-entry-'+i);
+		var header = container.find('.panel-heading');
+		var body = container.find('.panel-body');
+		//Remove previous
+		container.removeClass(function(i, css){
+			return (css.match (/\b(panel-|filter_)\S+/g) || []).join(' ');
+		});
+		//Process Flag
+		var star = false;
+		if(entry.flag.indexOf('star') != -1){//Star
+			star = true;
+			header.prepend(starDiv.clone());
+			container.data('star', 'true');
+			body.find('button.no-star').attr('disabled', 'disabled');
+		}else{
+			container.removeData('star');
+			body.find('button.no-star').attr('disabled', false);
+		}
+    if(entry.flag.indexOf('read') == -1){//Unread
+			if(!star){
+				++unread;
+				header.prepend(newDiv.clone());
+			}
+			container.addClass('panel-primary');
+			container.appendTo('#unread-e3xmessage');
+		}else{
+			container.addClass('panel-default');
+			container.appendTo('#read-e3xmessage');
+			body.collapse();
+		}
+	}
+	if(unread > 0){
+		var unread_div = $('<div>').prependTo($('#tab-e3xmessage a'));
+		unread_div.addClass('badge pull-right');
+		unread_div.text(unread);
+	}
+}
+
+var setE3XMessageFlag = function(){
+	var container = $($(this).parent().data('container'));
+	var id = $(this).parent().data('id');
+	var flag = $(this).data('flag');
+	var e3xmsg = e3xmessage[id];
+	var e3xmsg_id = e3xmsg.id;
+	var client =  new $.RestClient('/API/');
+	client.add('flag');
+	var action = '';
+	var data = {type:'e3xmessage', id:e3xmsg_id, flag:flag};
+	if(flag == 'star' && container.data('star')){//unstar
+		action = 'remove';
+	}
+	if (flag == 'star' && !container.data('star')){//star
+		//remove all other flags
+		e3xmsg.flag = new Array();
+		(function(data){
+			var flagdata = $.extend(true, {}, data);//Deep Copy
+			flagdata.flag = null;
+			client.flag.create('remove', flagdata).done(function(data){
+				api_error_handle(data);
+				flagdata.flag = 'star';
+				client.flag.create(action, flagdata).done(api_error_handle);
+			});
+		})(data);
+	}else{
+		client.flag.create(action, data).done(api_error_handle);
+	}
+	if(action == 'remove'){
+		container.removeData(flag);
+		var index;
+		while((index = e3xmsg.flag.indexOf(flag)) != -1){
+			e3xmsg.flag.splice(index, 1);
+		}
+	}else{
+		e3xmsg.flag.push(flag);
+	}
+	applyE3XMessageFlag();
+}
+
+var initE3XMessageComponent = function(){
+	//Action Bar
+	$('.hide .e3xmessage-action button').click(setE3XMessageFlag);
+	//Hide All Announcement
+	$('#read-all-e3xmessage').click(function(){
+		bootbox.confirm('封存全部訊息?', function(result){
+			if(result){
+				var ids = new Array();
+				$.each(e3xmessage, function(i, e){
+					if(e.flag.indexOf('star')!=-1)return;
+					ids.push(e.E3XMessageId);
+					e.flag.push('read');
+				});
+				var client =  new $.RestClient('/API/');
+				client.add('flag');
+				client.flag.create({type:'e3xmessage', id:ids.toString(), flag:'read'}).done(function(data){
+					api_error_handle(data);
+				});
+				applyE3XMessageFlag();
+			}
+		});
+	});
 }
 
 /* Announcement */
@@ -16,6 +164,7 @@ var getLatestAnnounce = function(){
 	client.add('announce');
 	var req = client.announce.read('login').always(function(data){
 		api_error_handle(data);
+    data.sort(sort_important);
 		announcement = new Array();
 		$('#announcement .loading').remove();
 		$('#tab-announcement img').remove();
@@ -137,7 +286,11 @@ var initAnnounceComponent = function(){
 	//Filter
 	var filter = $('#announcement-filter li a');
 	filter.click(function(){
-		$(this).parent().toggleClass('active');
+    var a = $(this);
+    var tmp = a.text();
+    a.text(a.data('toggle-text'));
+    a.data('toggle-text', tmp);
+		a.parent().toggleClass('active');
 		applyAnnounceFilter();
 	});
 	//Action Bar
@@ -187,6 +340,7 @@ var getDocumentList = function(){
 	client.add('document');
 	var req = client.document.read('id').always(function(data){
 		api_error_handle(data);
+    data.sort(sort_important);
 		docs = new Array();
 		$('#document .loading').remove();
 		$('#tab-document img').remove();
@@ -338,7 +492,11 @@ var initDocumentComponent = function(){
 	//Filter
 	var filter = $('#document-filter li a');
 	filter.click(function(){
-		$(this).parent().toggleClass('active');
+    var a = $(this);
+    var tmp = a.text();
+    a.text(a.data('toggle-text'));
+    a.data('toggle-text', tmp);
+		a.parent().toggleClass('active');
 		applyDocumentFilter();
 	});
 	//Action Bar
@@ -576,7 +734,25 @@ var genPanel = function(data, i){
 	bar.data('container', '#'+data.type+'-entry-'+i);
 	bar.find('button').tooltip();
 }
-
+/* Remember Tab */
+$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+  $.cookie('last_view_tab', $(e.target).attr('href'), {expires:365});
+});
+if($.cookie('last_view_tab')){
+  $('.nav-tabs a[href="'+$.cookie('last_view_tab')+'"]').tab('show');
+}
+/* Analyze */
+$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+  ga('send', 'event', 'click', 'dashboard-tab', $(e.target).attr('href'));
+});
+$.each(['announcement-action', 'document-action', 'homework-action'], function(i, e){
+  $('.'+e+' button').on('click', function(){
+    ga('send', 'event', 'click', e, $(this).data('flag'));
+  });
+});
+$('[id^=read-all-').on('click', function(){
+  ga('send', 'event', 'click', $(this).attr('id').split('-')[2]+'-action', 'read-all');
+});
 addLoading();
 getCourseList();
 getLatestAnnounce();
@@ -585,3 +761,5 @@ getDocumentList();
 initDocumentComponent();
 getHomeworkList();
 initHomeworkComponent();
+getE3XMessageList();
+initE3XMessageComponent();
