@@ -48,6 +48,9 @@
         </div>
       </div>
       <div class="tab-pane" id="coursetable">
+        <div class="pull-right"><a href="#" id="save-offline-coursetable" class="btn btn-primary">儲存離線課表</a></div>
+        <div class="clearfix"></div>
+        <? $this->load->view('page/coursetable'); ?>
       </div>
       <div class="tab-pane" id="document">
         <ul class="nav nav-pills pull-left" id="document-filter">

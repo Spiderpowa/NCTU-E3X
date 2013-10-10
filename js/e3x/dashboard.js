@@ -734,6 +734,25 @@ var genPanel = function(data, i){
 	bar.data('container', '#'+data.type+'-entry-'+i);
 	bar.find('button').tooltip();
 }
+/* CourseTable */
+var courseTable = new CourseTable();
+var getCourseTable = function(){
+  var client = new $.RestClient('/API/');
+  client.add('course');
+  client.course.read('time').done(function(data){
+    courseTable.setData(data);
+    courseTable.render('#coursetable');
+    $('#coursetable .loading').remove();
+		$('#tab-coursetable img').remove();
+  });
+}
+$('#save-offline-coursetable').click(function(){
+  bootbox.confirm('這將會使你的課表不用登入也可以查看，請確定不要在公用電腦使用本功能',function(result){
+    if(!result)return;
+    courseTable.save();
+  });
+  return false;
+});
 /* Remember Tab */
 $('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e){
   $.cookie('last_view_tab', $(e.target).attr('href'), {expires:365});
@@ -763,3 +782,4 @@ getHomeworkList();
 initHomeworkComponent();
 getE3XMessageList();
 initE3XMessageComponent();
+getCourseTable();

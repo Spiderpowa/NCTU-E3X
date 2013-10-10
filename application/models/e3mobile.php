@@ -157,9 +157,10 @@ class E3Mobile extends CI_Model{
   }
   
   function getCourseTime($keys){
-    $times = array_fill(0, count($keys), array('id'=>NULL, 'data'=>array()));
+    $times = array_fill(0, count($keys), array('data'=>array()));
     foreach($keys as $key){
       $times[$key]['id'] = $key;
+      $times[$key]['name'] =  $this->_Course[$key]['CourseName'];
       $data = $this->_genData(array('courseId'=>$this->_Course[$key]['CourseId']));
       $return = $this->_post('GetCourseTime', $data);
       foreach($return as $entry){
