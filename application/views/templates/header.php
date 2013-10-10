@@ -53,7 +53,7 @@ bootbox.setDefaults({locale:'zh_TW'});
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
-<div id="header">
+<div id="header" class="hidden-print">
   <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">

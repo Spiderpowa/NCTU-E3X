@@ -96,7 +96,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 hidden-print">
     <div class="list-group">
       <div class="list-group-item active">本學期課程</div>
       <? foreach($course as $key => $v){?>
