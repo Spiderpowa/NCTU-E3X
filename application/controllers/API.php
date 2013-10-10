@@ -17,6 +17,21 @@ class Api extends REST_Controller {
     $this->flag->getFlags('e3xmessage', $msg);
 		$this->response($msg);
   }
+  
+  function course_get($action){
+    if(!$this->user->isLogin())return $this->response(array('error'=>'Please Login First'));
+    $course = $this->e3mobile->getAllCourse();
+    if($this->get('id')){
+			$ids = explode(',', $this->get('id'));
+		}else{
+			$ids = range(0, count($course)-1);
+		}
+    switch($action){
+      case 'time':
+        $this->response($this->e3mobile->getCourseTime($ids));
+        break;
+    }
+  }
 	
 	function announce_get($action, $type = 1){
 		$anns = NULL;
