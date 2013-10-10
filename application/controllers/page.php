@@ -16,4 +16,10 @@ class Page extends CI_Controller {
 	{
 		$this->load->view('page/channel');
 	}
+  
+  public function coursetable()
+  {
+    $this->load->template('page/coursetable', array('offline'=>true));
+  }
+
 }

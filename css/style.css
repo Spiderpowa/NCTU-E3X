@@ -132,3 +132,36 @@ a.document-attachment{
   display:block;
   margin-top:10px;
 }
+#coursetable div.col-xs-1{
+  padding:0;
+}
+#coursetable div.header{
+  font-weight:bold;
+}
+#coursetable .course_data{
+  display:block;
+  width:100%;
+  border:1px solid #CCC;
+  border-right:none;
+  border-bottom:none;
+  text-align:center;
+  height:50px;
+}
+#coursetable div.col-xs-1:last-child .course_data{
+  border-right:1px solid #CCC;
+}
+#coursetable .course_data:last-child{
+  border-bottom:1px solid #CCC;
+}
+#coursetable div.course_color0{
+  background-color:#5CCDC9;
+}
+#coursetable div.course_color1{
+  background-color:#6C8DD5;
+}
+#coursetable div.course_color2{
+  background-color:#FFCF73;
+}
+#coursetable div.course_color3{
+  background-color:#FFB173;
+}

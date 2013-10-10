@@ -155,6 +155,21 @@ class E3Mobile extends CI_Model{
 		}
 		return $files;
   }
+  
+  function getCourseTime($keys){
+    $times = array_fill(0, count($keys), array('data'=>array()));
+    foreach($keys as $key){
+      $times[$key]['id'] = $key;
+      $times[$key]['name'] =  $this->_Course[$key]['CourseName'];
+      $data = $this->_genData(array('courseId'=>$this->_Course[$key]['CourseId']));
+      $return = $this->_post('GetCourseTime', $data);
+      foreach($return as $entry){
+        $time = $this->_fetchXml($entry, array('WeekDay', 'Section', 'RoomNo', 'CourseName'));
+        $times[$key]['data'][] = $time;
+      }
+    }
+    return $times;
+  }
 	
 	function testTicket(){
 		$data = $this->_genData(array(), true);
