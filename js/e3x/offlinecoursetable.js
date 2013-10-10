@@ -4,4 +4,6 @@ var initOfflineCourseTable = function(){
   courseTable.render('#coursetable');
 }
 
+$(function(){
 initOfflineCourseTable();
+});
