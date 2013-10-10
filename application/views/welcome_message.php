@@ -8,6 +8,9 @@
         <a class="btn btn-primary btn-lg" href="#loginModal" data-toggle="modal" role="button">馬上登入 &raquo;</a>
         <a class="btn btn-success btn-lg" href="#registerModal" data-toggle="modal" role="button">開通帳號 &raquo;</a>
       </p>
+      <p class="buttons">
+        <a class="btn btn-warning btn-lg" href="/page/coursetable" role="button">離線課表 &raquo;</a>
+      </p>
     </div>
   </div>
 </div>

@@ -70,6 +70,7 @@ bootbox.setDefaults({locale:'zh_TW'});
           <li class="divider-vertical"></li>
           <li><a href="/">首頁</a></li>
           <li><a href="https://www.facebook.com/NCTU.E3X" target="_blank">FB粉絲團</a></li>
+          <li><a href="/page/coursetable/">離線課表</a></li>
           <? if($session_user){?>
           <li><a href="#">Hi <?=$session_user['name'];?></a></li>
           <li class="dropdown">
