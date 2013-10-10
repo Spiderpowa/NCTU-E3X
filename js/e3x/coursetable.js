@@ -55,10 +55,12 @@ var CourseTable = function(){
   }
   
   this.save = function(){
+    ga('send', 'event', 'call', 'coursetable', 'save');
     $.cookie('coursetable', JSON.stringify(_self.getData()), {expires:365});
   }
   
   this.load = function(){
+    ga('send', 'event', 'call', 'coursetable', 'load');
     var dataStr = $.cookie('coursetable');
     if(!dataStr){
       bootbox.alert('沒有離線課表');
