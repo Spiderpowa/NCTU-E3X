@@ -10,6 +10,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, body{
 	background-color:white;
 }
 
+@media print{
+  #body{
+    padding: 0;
+  }
+}
+
 #footer{
 	margin-top:50px;
 	clear:both;
@@ -153,15 +159,18 @@ a.document-attachment{
 #coursetable .course_data:last-child{
   border-bottom:1px solid #CCC;
 }
+#coursetable .row .col-xs-1 .course_data:nth-of-type(even){
+  background-color:#EEE;
+}
 #coursetable div.course_color0{
-  background-color:#5CCDC9;
+  background-color:#5CCDC9 !important;
 }
 #coursetable div.course_color1{
-  background-color:#6C8DD5;
+  background-color:#6C8DD5 !important;
 }
 #coursetable div.course_color2{
-  background-color:#FFCF73;
+  background-color:#FFCF73 !important;
 }
 #coursetable div.course_color3{
-  background-color:#FFB173;
+  background-color:#FFB173 !important;
 }
