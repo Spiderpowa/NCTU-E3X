@@ -24,6 +24,7 @@ class Feedback extends CI_Controller {
 						'feedback'=>$this->input->post('feedback')
 					);
 					$this->db->insert('feedback', $data);
+          log_db('feedback', 'submit');
 					$this->load->success_msg('感謝您的填寫');
 				}
 			}else{

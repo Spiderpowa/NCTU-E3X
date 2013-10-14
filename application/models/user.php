@@ -23,6 +23,7 @@ class User extends CI_Model{
 			return array('error'=>'啟動碼已被使用');
 		if($this->db->insert('user', array('username'=>$username))){
 			//$this->serial->active($serial, $username);
+      log_db('register', $serial, $username);
 			return array('username'=>$username);
 		}else
 			return array('error'=>'你的帳號已經開通了喔');
@@ -35,8 +36,10 @@ class User extends CI_Model{
 		$this->load->model('e3mobile');
 		$return = $this->e3mobile->login($username, $password);
 		if($return === FALSE){
+      log_db('login_fail', 'user', $username);
 			return array('error'=>'登入失敗');
 		}else{
+      log_db('login', 'user', $username);
 			//Get Courst List	
 			$return['id'] = $id;
 			$this->session->set_userdata('user', $return);
