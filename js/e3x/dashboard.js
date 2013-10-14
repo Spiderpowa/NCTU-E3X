@@ -769,7 +769,7 @@ $.each(['announcement-action', 'document-action', 'homework-action'], function(i
     ga('send', 'event', 'click', e, $(this).data('flag'));
   });
 });
-$('[id^=read-all-').on('click', function(){
+$('[id^=read-all-]').on('click', function(){
   ga('send', 'event', 'click', $(this).attr('id').split('-')[2]+'-action', 'read-all');
 });
 addLoading();
