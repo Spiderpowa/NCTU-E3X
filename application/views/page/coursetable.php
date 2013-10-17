@@ -8,8 +8,8 @@
   for($day = 0; $day < 8; ++$day){ ?>
   <div class="col-xs-1">
     <? for($class = 0; $class < count($class_time); ++$class){?>
-      <? if(!$class){?><div class="header course_data""><?=$day_cht[$day];?>&nbsp;</div><? }else{?>
-        <? if(!$day){?><div class="header course_data""><?=$class_time[$class];?>&nbsp;<div><?=$class_time_info[$class];?></div></div><? }else{?>
+      <? if(!$class){?><div class="header course_data"><?=$day_cht[$day];?>&nbsp;</div><? }else{?>
+        <? if(!$day){?><div class="header course_data"><?=$class_time[$class];?>&nbsp;<div><?=$class_time_info[$class];?></div></div><? }else{?>
           <div id="course_<?=$day;?><?=$class_time[$class];?>" class="course_data">&nbsp;</div>
         <? }?>
       <? }?>
