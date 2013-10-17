@@ -1,27 +1,3 @@
-<script src="/js/jquery.validate.min.js"></script>
-<script>
-$(function(){
-	$('#feedbackForm').validate({
-		rules:{
-			name: {
-				required:true
-			},
-			contact: {
-				required:true
-			},
-			feedback: {
-				required:true
-			}
-		},
-		highlight: function(element) {
-			$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		},
-		success: function(element) {
-			$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-		}
-	});
-});
-</script>
 <h2>意見回應</h2>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
@@ -60,3 +36,5 @@ $(function(){
     </form>
   </div>
 </div>
+<?=load_js('jquery.validate.min.js');?>
+<?=load_js('e3x/feedback.js');?>

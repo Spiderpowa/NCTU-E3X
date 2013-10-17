@@ -14,20 +14,8 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet">
 <?=load_css('style.css');?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="/js/jquery.rest.min.js?v=0.0.7"></script>
-<script src="/js/jquery.cookie.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="/js/holder.js"></script>
-<script src="/js/bootbox.min.js?v=4.0.0"></script>
 <?=load_js('js.js');?>
 <?=load_js('e3x/error_handle.js');?>
-<script>
-var bootstrapButton = $.fn.button.noConflict();
-$.fn.bootstrapBtn = bootstrapButton;
-bootbox.setDefaults({locale:'zh_TW'});
-</script>
 </head>
 <body>
 <div id="fb-root"></div>
