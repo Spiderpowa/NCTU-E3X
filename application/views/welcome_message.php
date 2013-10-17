@@ -1,4 +1,3 @@
-<script src="/js/jquery.validate.min.js"></script>
 <div class="jumbotron full-width" id="welcome">
   <div class="full-width-bg">
     <div class="full-width-content">
@@ -122,4 +121,5 @@
 </div><!-- /.modal -->
 
 <a href="https://github.com/Spiderpowa/NCTU-E3X"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+<?=load_js('jquery.validate.min.js');?>
 <?=load_js('e3x/index.js');?>
