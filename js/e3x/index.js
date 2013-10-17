@@ -164,4 +164,6 @@ var FBShow = function (){
 }
 
 var fbshow = new FBShow();
-fbshow.init();
+$(function(){
+  fbshow.init();
+});
