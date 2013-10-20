@@ -3,7 +3,8 @@
 class E3Mobile extends CI_Model{
 	private $_API = 'http://e3.nctu.edu.tw/mService/service.asmx/';
   private $_MetaType = array(
-    'document' => 10
+    'document' => 10,
+    'homework' => 20
   );
 	private $_LoginTicket = NULL;
 	private $_AccountID = NULL;
