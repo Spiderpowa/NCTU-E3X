@@ -167,3 +167,5 @@ var fbshow = new FBShow();
 $(function(){
   fbshow.init();
 });
+
+prefetch('/js/e3x/dashboard.js');
