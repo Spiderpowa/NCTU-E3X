@@ -30,6 +30,25 @@ class Admin extends CI_Controller {
 		}
 	}
   
+  public function changepassword()
+  {
+    $this->_checkAdmin();
+    if(strlen($this->input->post('newpassword')) < 5){
+      $this->load->error_msg('Password Too Short');
+      return $this->index();
+    }else if($this->input->post('newpassword') != $this->input->post('confirmpassword')){
+      $this->load->error_msg('Password Not Match');
+      return $this->index();
+    }
+    $user = $this->user->getUser();
+    if($this->user->changePassword($user['id'], $this->input->post('newpassword'), 1)){
+      $this->load->success_msg('Password Changed');
+    }else{
+      $this->load->error_msg('Password Change Fail');
+    }
+    return $this->index();
+  }
+  
   public function serial($action = NULL)
   {
     $this->_checkAdmin();

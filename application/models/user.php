@@ -69,7 +69,7 @@ class User extends CI_Model{
     $row = $query->row();
     if(!$isAdmin && !$this->_test_password($oldPassword, $row->password))return false;
     $this->db->where('id', $id);
-    return $this->db->update('password', $this->_hash_password($newPassword));
+    return $this->db->update('user', array('password'=> $this->_hash_password($newPassword)));
   }
 	
 	function isRegister($username){
