@@ -47,6 +47,30 @@ class User extends CI_Model{
 			return array('username'=>$username);
 		}
 	}
+  
+  function localLogin($username, $password){
+    $this->db->select('id, username, nickname, password, admin')->from('user')->where('username', $username);
+		$query = $this->db->get();
+		if(!$query->num_rows())
+			return array('error'=>'Unmatch Username/Password');
+		$row = $query->row_array();
+		if(!$this->_test_password($password, $row['password']))
+			return array('error'=>'Unmatch Username/Password');
+    $row['name'] = $row['nickname'];
+		$this->session->set_userdata('user', $row);
+		return true;
+  }
+  
+  function changePassword($id, $newPassword, $isAdmin = false, $oldPassword = NULL){
+    if(!$isAdmin && $id != $this->getUser()->id)return false;
+    $this->db->select('id, username, password')->from('user')->where('id', $id);
+    $query = $this->db->get();
+    if(!$query->num_rows())return false;
+    $row = $query->row();
+    if(!$isAdmin && !$this->_test_password($oldPassword, $row->password))return false;
+    $this->db->where('id', $id);
+    return $this->db->update('password', $this->_hash_password($newPassword));
+  }
 	
 	function isRegister($username){
 		$this->db->select('id')->from('user')->where('username', $username);

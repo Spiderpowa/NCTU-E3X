@@ -21,11 +21,14 @@ class Serial extends CI_Model{
 		$this->db->update('serial', array('enable'=>0, 'usedby'=>$username));
 	}
 	
-	function generate($prefix = 'A0T0'){
-		$serial_array = array($this->_gen_serial(),$this->_gen_serial(),$this->_gen_serial());
-		if(strlen($prefix))array_unshift($prefix);
+	function generate($prefix = 'A0T0', $segment = 3, $length = 5){
+    $serial_array = array();
+    for($i = 0; $i < $segment ; ++$i)
+      $serial_array[] = $this->_gen_serial($length);
+		if(strlen($prefix))array_unshift($serial_array, $prefix);
 		$serial = implode('-', $serial_array);
-		return $this->create($serial);
+		if($this->create($serial)!==FALSE)return $serial;
+    return false;
 	}
 	
 	function create($serial){
@@ -33,6 +36,6 @@ class Serial extends CI_Model{
 	}
 	
 	private function _gen_serial($len = 5){
-		return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $len);
+		return substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $len);
 	}
 }
