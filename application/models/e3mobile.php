@@ -150,8 +150,9 @@ class E3Mobile extends CI_Model{
     ));
   	$return = $this->_post('GetAttachFileList', $data);
 		foreach($return as $entry){
-			$file = $this->_fetchXml($entry, array('DisplayFileName', 'RealityFileName', 'MimeType', 'FileSize', 'CreateTime'));
+			$file = $this->_fetchXml($entry, array('AttachMediaId', 'DisplayFileName', 'RealityFileName', 'MimeType', 'FileSize', 'CreateTime'));
 			$file['id'] = $key;
+      $file['courseId'] =  $this->_Course[$key]['CourseId'];
 			$files[] = $file;
 		}
 		return $files;

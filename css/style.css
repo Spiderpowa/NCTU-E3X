@@ -134,8 +134,7 @@ a[name] {
 #dashboard .panel .panel-body {
 	overflow-y:hidden;
 }
-a.document-attachment{
-  display:block;
+div.document-attachment{
   margin-top:10px;
 }
 #coursetable div.col-xs-1{

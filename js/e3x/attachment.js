@@ -32,11 +32,15 @@ var createAttachmentLink = function(resId, type, courseId){
           content.append('無附件');
         }
         for(var i=0; i<data.length; ++i){
-          var link = $('<a>');
+          var div = $('<div>').appendTo(content);
+          div.addClass('document-attachment');
+          var dnlink = $('<a>').appendTo(div);
+          dnlink.addClass('btn btn-info');
+          dnlink.attr('href', 'http://e3.nctu.edu.tw/NCTU_EASY_E3P/LMS2/common_get_content_media_attach_file.ashx?AttachMediaId='+data[i].AttachMediaId+'&CourseId='+data[i].courseId);
+          dnlink.text('下載');
+          var link = $('<a>').appendTo(div);
           link.text(data[i].DisplayFileName);
           link.attr('href', data[i].RealityFileName);
-          link.addClass('document-attachment');
-          content.append(link);
         }
         bootbox.alert(content.html());
       }
