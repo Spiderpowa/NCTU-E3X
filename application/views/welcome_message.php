@@ -37,7 +37,7 @@
     <div id="fb-leave-comment" class="panel-collapse collapse">
       <div class="panel-body">  
         <div class="pull-right"><a class="accordion-toggle" data-toggle="collapse" data-parent="#welcome-comment" href="#fb-comment-show">看大家的回應</a></div>
-        <div class="fb-comments" data-href="<?=site_url();?>" data-colorscheme="light" data-num-posts="0" data-width="650"></div>
+        <div class="fb-comments" data-href="<?=site_url();?>" data-colorscheme="light" data-width="650"></div>
       </div>
     </div>
   </div>
