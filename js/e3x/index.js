@@ -97,7 +97,6 @@ var parse_parameter = function(){
 
 parse_parameter();
 /* Facebook Comment Show */
-$(window).resize(function(){$('.fb-comments iframe,.fb-comments span:first-child').css({'width':$('#commentboxcontainer').width()});});
 var FBShow = function (){
   var client;
   var self = this;
